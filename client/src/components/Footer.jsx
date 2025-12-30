@@ -172,7 +172,7 @@ const Footer = () => {
       </div>
 
       {/* MAIN FOOTER */}
-      <div className="bg-[#0f0f1a] text-white py-12 px-6">
+      <div className="bg-white text-[#black] py-12 px-6">
         <div className="container mx-auto">
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">

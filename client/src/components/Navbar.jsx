@@ -16,10 +16,10 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "Dashboard", to: "/dashboard" },
-    { label: "Our Solutions", to: "/solutions" },
-    { label: "Investor Relations", to: "/investors" },
+    { label: "our solutions", to:"/"},
+    { label: "Investor Relations", to: "/investor-relations" },
     { label: "Contact Us", to: "/contact" },
-    { label: "Trust & Safety", to: "/trust" },
+    { label: "Trust & Safety", to: "/trust-safety" },
   ];
 
   return (

@@ -46,4 +46,11 @@ localStorage.removeItem('user')
 setAuth(null)
 set({ user: null, token: null })
 },
+
+setUser: (user) => {
+if (user) {
+localStorage.setItem('user', JSON.stringify(user))
+}
+set({ user })
+},
 }))

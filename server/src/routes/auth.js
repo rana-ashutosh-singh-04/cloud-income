@@ -46,7 +46,11 @@ router.post('/signup', async (req, res) => {
       }
     })
   } catch (error) {
-    res.status(500).json({ message: 'Server error' })
+    console.error('Error in /signup route:', error)
+    res.status(500).json({ 
+      message: 'Server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    })
   }
 })
 
@@ -54,6 +58,10 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { phone, pin } = req.body
+
+    if (!phone || !pin) {
+      return res.status(400).json({ message: 'Phone and PIN are required' })
+    }
 
     const user = await User.findOne({ phone })
     if (!user) {
@@ -80,7 +88,11 @@ router.post('/login', async (req, res) => {
       }
     })
   } catch (error) {
-    res.status(500).json({ message: 'Server error' })
+    console.error('Error in /login route:', error)
+    res.status(500).json({ 
+      message: 'Server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    })
   }
 })
 

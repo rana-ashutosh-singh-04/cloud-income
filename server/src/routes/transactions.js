@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import User from '../models/User.js'
 import Transaction from '../models/Transaction.js'
 import { auth } from '../middleware/auth.js'
+import { getIO } from '../config/socket.js'
 
 const router = express.Router()
 
@@ -12,11 +13,24 @@ router.post('/send', auth, async (req, res) => {
     const { vpa, amount, note } = req.body
     const sender = req.user
 
-    if (amount <= 0) {
+    // Validate sender
+    if (!sender || !sender._id) {
+      return res.status(401).json({ message: 'User not authenticated' })
+    }
+
+    // Validate request body
+    if (!vpa || !amount) {
+      return res.status(400).json({ message: 'VPA and amount are required' })
+    }
+
+    const numAmount = Number(amount)
+    if (isNaN(numAmount) || numAmount <= 0) {
       return res.status(400).json({ message: 'Invalid amount' })
     }
 
-    if (sender.balance < amount) {
+    // Ensure balance is a number
+    const senderBalance = Number(sender.balance) || 0
+    if (senderBalance < numAmount) {
       return res.status(400).json({ message: 'Insufficient balance' })
     }
 
@@ -36,26 +50,26 @@ router.post('/send', auth, async (req, res) => {
     const debitTxn = new Transaction({
       sender: sender._id,
       receiver: receiver._id,
-      amount,
+      amount: numAmount,
       type: 'DEBIT',
       counterpartyName: receiver.name,
-      note,
+      note: note || '',
       reference
     })
 
     const creditTxn = new Transaction({
       sender: sender._id,
       receiver: receiver._id,
-      amount,
+      amount: numAmount,
       type: 'CREDIT',
       counterpartyName: sender.name,
-      note,
+      note: note || '',
       reference
     })
 
     // Update balances
-    sender.balance -= amount
-    receiver.balance += amount
+    sender.balance = senderBalance - numAmount
+    receiver.balance = (Number(receiver.balance) || 0) + numAmount
 
     await Promise.all([
       debitTxn.save(),
@@ -64,17 +78,72 @@ router.post('/send', auth, async (req, res) => {
       receiver.save()
     ])
 
+    // Emit real-time events
+    const transactionData = {
+      id: debitTxn._id,
+      amount: numAmount,
+      type: 'DEBIT',
+      counterpartyName: receiver.name,
+      note,
+      reference,
+      createdAt: debitTxn.createdAt,
+      balance: sender.balance
+    }
+
+    const receiverTransactionData = {
+      id: creditTxn._id,
+      amount: numAmount,
+      type: 'CREDIT',
+      counterpartyName: sender.name,
+      note,
+      reference,
+      createdAt: creditTxn.createdAt,
+      balance: receiver.balance
+    }
+
+    // Emit real-time events
+    const io = getIO()
+    if (io) {
+      // Notify sender
+      io.to(`user:${sender._id}`).emit('transaction:new', transactionData)
+      io.to(`user:${sender._id}`).emit('balance:update', { balance: sender.balance })
+
+      // Notify receiver
+      io.to(`user:${receiver._id}`).emit('transaction:new', receiverTransactionData)
+      io.to(`user:${receiver._id}`).emit('balance:update', { balance: receiver.balance })
+      io.to(`user:${receiver._id}`).emit('payment:received', {
+        from: sender.name,
+        amount: numAmount,
+        reference
+      })
+    }
+
     res.json({
       message: 'Money sent successfully',
       transaction: {
         id: debitTxn._id,
-        amount,
+        amount: numAmount,
         receiver: receiver.name,
         reference
       }
     })
   } catch (error) {
-    res.status(500).json({ message: 'Server error' })
+    console.error('Error in /send route:', error)
+    console.error('Error stack:', error.stack)
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      code: error.code
+    })
+    res.status(500).json({ 
+      message: 'Server error',
+      error: error.message || 'Unknown error',
+      details: process.env.NODE_ENV === 'development' ? {
+        stack: error.stack,
+        name: error.name,
+        code: error.code
+      } : undefined
+    })
   }
 })
 
@@ -100,7 +169,11 @@ router.get('/recent', auth, async (req, res) => {
 
     res.json({ transactions: formattedTransactions })
   } catch (error) {
-    res.status(500).json({ message: 'Server error' })
+    console.error('Error in /recent route:', error)
+    res.status(500).json({ 
+      message: 'Server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    })
   }
 })
 
@@ -164,6 +237,46 @@ router.post('/qr-pay', auth, async (req, res) => {
       receiver.save()
     ])
 
+    // Emit real-time events
+    const transactionData = {
+      id: debitTxn._id,
+      amount: numAmount,
+      type: 'DEBIT',
+      counterpartyName: receiver.name,
+      note,
+      reference,
+      createdAt: debitTxn.createdAt,
+      balance: sender.balance
+    }
+
+    const receiverTransactionData = {
+      id: creditTxn._id,
+      amount: numAmount,
+      type: 'CREDIT',
+      counterpartyName: sender.name,
+      note,
+      reference,
+      createdAt: creditTxn.createdAt,
+      balance: receiver.balance
+    }
+
+    // Emit real-time events
+    const io = getIO()
+    if (io) {
+      // Notify sender
+      io.to(`user:${sender._id}`).emit('transaction:new', transactionData)
+      io.to(`user:${sender._id}`).emit('balance:update', { balance: sender.balance })
+
+      // Notify receiver
+      io.to(`user:${receiver._id}`).emit('transaction:new', receiverTransactionData)
+      io.to(`user:${receiver._id}`).emit('balance:update', { balance: receiver.balance })
+      io.to(`user:${receiver._id}`).emit('payment:received', {
+        from: sender.name,
+        amount: numAmount,
+        reference
+      })
+    }
+
     res.json({
       message: 'Payment successful',
       transaction: {
@@ -174,7 +287,11 @@ router.post('/qr-pay', auth, async (req, res) => {
       }
     })
   } catch (error) {
-    res.status(500).json({ message: 'Server error' })
+    console.error('Error in /qr-pay route:', error)
+    res.status(500).json({ 
+      message: 'Server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    })
   }
 })
 
