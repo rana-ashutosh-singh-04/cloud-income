@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Card from "../components/card";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
-import Footer from "../components/footer";
+import Footer from "../components/Footer";
 
 export default function Login() {
   const nav = useNavigate();
