@@ -71,12 +71,14 @@ router.post('/send', auth, async (req, res) => {
     sender.balance = senderBalance - numAmount
     receiver.balance = (Number(receiver.balance) || 0) + numAmount
 
-    await Promise.all([
-      debitTxn.save(),
-      creditTxn.save(),
-      sender.save(),
-      receiver.save()
-    ])
+    // 1️⃣ Save balances first
+    await sender.save()
+    await receiver.save()
+
+    // 2️⃣ Then save transactions
+    await debitTxn.save()
+    await creditTxn.save()
+
 
     // Emit real-time events
     const transactionData = {
@@ -193,7 +195,8 @@ router.post('/qr-pay', auth, async (req, res) => {
     // Reuse send logic
     const sender = req.user
 
-    if (amount <= 0) {
+    const numAmount = Number(amount)
+    if (isNaN(numAmount) || numAmount <= 0) {
       return res.status(400).json({ message: 'Invalid amount' })
     }
 
@@ -230,12 +233,13 @@ router.post('/qr-pay', auth, async (req, res) => {
     sender.balance -= amount
     receiver.balance += amount
 
-    await Promise.all([
-      debitTxn.save(),
-      creditTxn.save(),
-      sender.save(),
-      receiver.save()
-    ])
+    // 1️⃣ Save balances first
+    await sender.save()
+    await receiver.save()
+
+    // 2️⃣ Then save transactions
+    await debitTxn.save()
+    await creditTxn.save()
 
     // Emit real-time events
     const transactionData = {
@@ -281,7 +285,7 @@ router.post('/qr-pay', auth, async (req, res) => {
       message: 'Payment successful',
       transaction: {
         id: debitTxn._id,
-        amount,
+        amount:numAmount,
         receiver: receiver.name,
         reference
       }

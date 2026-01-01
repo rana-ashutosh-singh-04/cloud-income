@@ -15,8 +15,8 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { label: "Dashboard", to: "/dashboard" },
     { label: "our solutions", to:"/"},
+    { label: "Dashboard", to: "/dashboard" },
     { label: "Investor Relations", to: "/investor-relations" },
     { label: "Contact Us", to: "/contact" },
     { label: "Trust & Safety", to: "/trust-safety" },

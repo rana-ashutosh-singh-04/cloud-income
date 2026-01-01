@@ -1,56 +1,112 @@
-import { create } from 'zustand'
-import { api, setAuth } from '../lib/api'
-
+import { create } from "zustand";
+import { api, setAuth } from "../lib/api";
 
 export const useAuth = create((set, get) => ({
-user: null,
-token: null,
-loading: false,
+  user: null,
+  token: null,
+  loading: false,
 
+  // -------------------------
+  // Init auth from localStorage (SAFE)
+  // -------------------------
+  initFromStorage: () => {
+    try {
+      const rawToken = localStorage.getItem("token");
+      const rawUser = localStorage.getItem("user");
 
-initFromStorage: () => {
-const token = localStorage.getItem('token')
-const user = JSON.parse(localStorage.getItem('user') || 'null')
-if (token) setAuth(token)
-set({ token, user })
-},
+      // ❌ half-auth or corrupted storage
+      if (
+        !rawToken ||
+        !rawUser ||
+        rawUser === "undefined" ||
+        rawUser === "null"
+      ) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        set({ token: null, user: null });
+        return;
+      }
 
+      const parsedUser = JSON.parse(rawUser);
 
-signup: async (payload) => {
-set({ loading: true })
-try {
-const { data } = await api.post('/auth/signup', payload)
-localStorage.setItem('token', data.token)
-localStorage.setItem('user', JSON.stringify(data.user))
-setAuth(data.token)
-set({ user: data.user, token: data.token, loading: false })
-} catch (e) { set({ loading: false }); throw e }
-},
+      setAuth(rawToken);
+      set({
+        token: rawToken,
+        user: parsedUser,
+      });
+    } catch (err) {
+      console.error("Auth hydration failed:", err);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      set({ token: null, user: null });
+    }
+  },
 
+  // -------------------------
+  // Signup
+  // -------------------------
+  signup: async (payload) => {
+    set({ loading: true });
+    try {
+      const { data } = await api.post("/auth/signup", payload);
 
-login: async (payload) => {
-set({ loading: true })
-try {
-const { data } = await api.post('/auth/login', payload)
-localStorage.setItem('token', data.token)
-localStorage.setItem('user', JSON.stringify(data.user))
-setAuth(data.token)
-set({ user: data.user, token: data.token, loading: false })
-} catch (e) { set({ loading: false }); throw e }
-},
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
+      setAuth(data.token);
+      set({ user: data.user, token: data.token, loading: false });
+    } catch (e) {
+      set({ loading: false });
+      throw e;
+    }
+  },
 
-logout: () => {
-localStorage.removeItem('token')
-localStorage.removeItem('user')
-setAuth(null)
-set({ user: null, token: null })
-},
+  // -------------------------
+  // Login
+  // -------------------------
+  login: async (payload) => {
+    set({ loading: true });
+    try {
+      const { data } = await api.post("/auth/login", payload);
 
-setUser: (user) => {
-if (user) {
-localStorage.setItem('user', JSON.stringify(user))
-}
-set({ user })
-},
-}))
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      setAuth(data.token);
+      set({ user: data.user, token: data.token, loading: false });
+    } catch (e) {
+      set({ loading: false });
+      throw e;
+    }
+  },
+
+  // -------------------------
+  // Logout (FULL CLEANUP)
+  // -------------------------
+  logout: () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setAuth(null);
+    set({ user: null, token: null });
+  },
+
+  // -------------------------
+  // Safe user updater (NO undefined)
+  // -------------------------
+  setUser: (updater) => {
+    set((state) => {
+      const nextUser =
+        typeof updater === "function"
+          ? updater(state.user)
+          : updater;
+
+      if (nextUser) {
+        localStorage.setItem("user", JSON.stringify(nextUser));
+      } else {
+        localStorage.removeItem("user");
+      }
+
+      return { user: nextUser };
+    });
+  },
+}));

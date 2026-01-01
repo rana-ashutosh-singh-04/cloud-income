@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { 
@@ -31,26 +32,57 @@ export default function Contact() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
-  };
+const handleSubmit = (e) => {
+  e.preventDefault(); 
+
+  emailjs
+    .send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,      
+      {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message,
+      },
+     import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    )
+    .then(() => {
+      console.log("Email sent successfully");
+
+      setSubmitted(true);
+
+      // form reset
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+
+      setTimeout(() => setSubmitted(false), 3000);
+    })
+    .catch((error) => {
+      console.error("Email send failed:", error);
+      alert("Failed to send message. Please try again.");
+    });
+};
+
 
   const contactMethods = [
     {
       icon: Phone,
       title: "Phone Support",
-      details: "+91-1800-123-4567",
+      details: "+91-620-228-5568",
       description: "24/7 customer support",
       color: "bg-blue-500"
     },
     {
       icon: Mail,
       title: "Email Support",
-      details: "support@phonepay.com",
+      details: "singhrananshutosh6@gmail.com",
       description: "We'll respond within 24 hours",
       color: "bg-green-500"
     },
@@ -104,7 +136,7 @@ export default function Contact() {
                   <Icon className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="font-bold text-gray-900 mb-2">{method.title}</h3>
-                <p className="text-lg font-semibold text-gray-900 mb-1">{method.details}</p>
+                <p className="text-lg font-semibold text-gray-900 mb-1 break-all">{method.details}</p>
                 <p className="text-sm text-gray-600">{method.description}</p>
               </div>
             );

@@ -58,14 +58,34 @@ export default function SendMoney() {
   }, [socket.lastTransaction]);
 
   // Listen for real-time balance updates
-  useEffect(() => {
-    if (socket.balanceUpdate && user) {
-      setUser({ ...user, balance: socket.balanceUpdate.balance });
-      // Update localStorage
-      const updatedUser = { ...user, balance: socket.balanceUpdate.balance };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+ useEffect(() => {
+  if (!socket.balanceUpdate) return;
+
+  const newBalance = socket.balanceUpdate.balance;
+
+  // 🛑 Guard against invalid balance
+  if (typeof newBalance !== "number") {
+    console.warn("Invalid balance update ignored:", newBalance);
+    return;
+  }
+
+  setUser(prevUser => {
+    if (!prevUser) return prevUser;
+
+    // 🛑 Avoid unnecessary re-renders
+    if (prevUser.balance === newBalance) {
+      return prevUser;
     }
-  }, [socket.balanceUpdate, user, setUser]);
+
+    const updatedUser = {
+      ...prevUser,
+      balance: newBalance,
+    };
+
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    return updatedUser;
+  });
+}, [socket.balanceUpdate, setUser]);
 
   const loadRecentTransactions = async () => {
     try {
