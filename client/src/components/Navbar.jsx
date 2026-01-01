@@ -29,10 +29,11 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-center gap-2">
           <img
-            src={logo}
-            alt="PhonePe Logo"
-            className="h-12 w-auto object-contain"
-          />
+        src="/favicon-32x32.png"
+        alt="Cloud Income Logo"
+        className="h-8 w-8"
+        />
+<span className="ml-2 font-semibold">Cloud income</span>
         </div>
 
         {/* Desktop Menu */}
