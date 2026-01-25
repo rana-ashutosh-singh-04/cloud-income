@@ -171,7 +171,7 @@ export default function InvestorRelations() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
-              href="mailto:investors@phonepay.com" 
+              href="mailto:investors@Cloud income.com" 
               className="px-6 py-3 bg-white text-purple-700 rounded-xl font-semibold hover:bg-gray-100 transition"
             >
               Email Investor Relations

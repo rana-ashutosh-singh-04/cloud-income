@@ -1,4 +1,4 @@
-# PhonePay Clone - System Design Documentation
+# Cloud income Clone - System Design Documentation
 
 ## 📋 Table of Contents
 1. [System Overview](#system-overview)
@@ -18,7 +18,7 @@
 
 ## 🎯 System Overview
 
-This is a **PhonePe/UPI payment application clone** built with a **React frontend** and **Node.js/Express backend**. The system allows users to:
+This is a **Cloud income/UPI payment application clone** built with a **React frontend** and **Node.js/Express backend**. The system allows users to:
 - Register and authenticate with phone number and PIN
 - Send money to other users via VPA (Virtual Payment Address)
 - View transaction history
@@ -404,7 +404,7 @@ App.jsx (Root)
 ## 📁 File Structure
 
 ```
-phone pay/
+Cloud income/
 ├── client/                          # React Frontend
 │   ├── src/
 │   │   ├── components/              # Reusable components
@@ -474,7 +474,7 @@ phone pay/
 
 3. **Create `.env` file**:
    ```env
-   MONGO_URI=mongodb://localhost:27017/phonepay
+   MONGO_URI=mongodb://localhost:27017/Cloud income
    JWT_SECRET=your_secret_key_here
    PORT=4000
    ```

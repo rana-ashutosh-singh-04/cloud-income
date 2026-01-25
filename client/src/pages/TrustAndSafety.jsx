@@ -54,7 +54,7 @@ export default function TrustAndSafety() {
     {
       icon: AlertTriangle,
       title: "Never Share Your PIN",
-      description: "PhonePe will never ask for your PIN or OTP. If someone asks, it's a scam."
+      description: "Cloud income will never ask for your PIN or OTP. If someone asks, it's a scam."
     },
     {
       icon: CheckCircle,
@@ -64,12 +64,12 @@ export default function TrustAndSafety() {
     {
       icon: Shield,
       title: "Use Official App Only",
-      description: "Download PhonePe only from official app stores. Beware of fake apps that may steal your information."
+      description: "Download Cloud income only from official app stores. Beware of fake apps that may steal your information."
     },
     {
       icon: Lock,
       title: "Keep App Updated",
-      description: "Regular updates include security patches. Always keep your PhonePe app updated to the latest version."
+      description: "Regular updates include security patches. Always keep your Cloud income app updated to the latest version."
     }
   ];
 
@@ -214,7 +214,7 @@ export default function TrustAndSafety() {
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
             <a 
-              href="mailto:security@phonepay.com" 
+              href="mailto:security@Cloudincome.com" 
               className="px-6 py-3 bg-white text-red-700 rounded-xl font-semibold hover:bg-gray-100 transition text-center"
             >
               Email Security Team

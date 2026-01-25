@@ -23,7 +23,7 @@ const Footer = () => {
              <div className="md:ml-8 mt-4 md:mt-0 text-center md:text-left">
             <h2 className="text-2xl font-bold">Your money stays safe.</h2>
             <p className="text-sm opacity-90 mt-1 mb-3">
-              PhonePe protects your money with security systems that help minimize frauds.
+             Cloud income protects your money with security systems that help minimize frauds.
             </p>
             <div className="flex gap-4 justify-center md:justify-start text-xs font-semibold opacity-80">
               <span className="flex items-center gap-1">✓ PCI DSS COMPLIANT</span>
@@ -53,13 +53,13 @@ const Footer = () => {
           
           {/* Header */}
           <div className="flex items-center gap-3 mb-4">
-             {/* You can replace this with the actual PhonePe SVG Logo */}
+             {/* You can replace this with the actual Cloud income SVG Logo */}
              <div className="w-10 h-10 bg-white rounded-md text-[#6739b7] font-bold flex items-center justify-center text-xl">पे</div>
-             <h1 className="text-3xl md:text-4xl font-bold">PhonePe Pulse</h1>
+             <h1 className="text-3xl md:text-4xl font-bold">Cloud income Pulse</h1>
           </div>
           
           <p className="text-lg mb-12 max-w-2xl">
-            Get the latest data trends & insights on PhonePe Pulse!
+            Get the latest data trends & insights on Cloud income Pulse!
           </p>
 
           {/* Statistics Grid */}
@@ -90,7 +90,7 @@ const Footer = () => {
 
           {/* Button */}
           <button className="bg-white text-[#6739b7] font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition">
-            Explore PhonePe Pulse
+            Explore Cloud income Pulse
           </button>
 
         </div>
@@ -117,7 +117,7 @@ const Footer = () => {
               <div className="text-white">
                 <h3 className="text-2xl font-bold mb-2">Your money stays safe.</h3>
                 <p className="text-sm opacity-90">
-                  PhonePe protects your money with security systems that help minimize frauds.
+                  Cloud income protects your money with security systems that help minimize frauds.
                 </p>
                 <div className="flex gap-4 mt-3">
                   <span className="text-xs opacity-80">✓ PCI DSS</span>
@@ -130,11 +130,11 @@ const Footer = () => {
             <div className="text-white text-center md:text-right">
               <div className="flex items-center gap-2 mb-4 justify-center md:justify-end">
                 <Shield className="w-6 h-6" />
-                <h4 className="text-xl font-bold">PhonePe Pulse</h4>
+                <h4 className="text-xl font-bold">Cloud income Pulse</h4>
               </div>
 
               <p className="text-sm mb-6 opacity-90">
-                Get the latest data trends & insights on PhonePe Pulse!
+                Get the latest data trends & insights on Cloud income Pulse!
               </p>
 
               <div className="flex flex-wrap gap-8 justify-center md:justify-end mb-6">
@@ -162,7 +162,7 @@ const Footer = () => {
               </div>
 
               <button className="bg-white text-purple-700 px-4 py-2 rounded-xl font-semibold shadow hover:bg-gray-100 transition">
-                Explore PhonePe Pulse
+                Explore Cloud income Pulse
               </button>
 
             </div>
@@ -181,7 +181,7 @@ const Footer = () => {
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-6">
                 <Shield className="w-8 h-8 text-purple-500" />
-                <span className="text-xl font-bold">PhonePe</span>
+                <span className="text-xl font-bold">Cloud income</span>
               </div>
             </div>
 

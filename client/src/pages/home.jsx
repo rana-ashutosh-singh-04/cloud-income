@@ -6,7 +6,7 @@ import LazySection from "../components/LazySection";
 
 // Lazy load heavy components for code splitting (Next.js-like optimization)
 const Footer = lazy(() => import("../components/Footer"));
-const HeroDecorations = lazy(() => import("../components/HeroDecorations"));
+import Hero  from "../components/Hero";
 import FeatureHighlight from "../components/FeatureHighlight";
 import TestimonialCard from "../components/TestimonialCard";
 import StockMarketWidget from "../components/StockMarketWidget";
@@ -73,7 +73,7 @@ function Home() {
     { 
       icon: Users, 
       title: "61+ Crore Users", 
-      desc: "Join millions of Indians who trust PhonePe for their daily payments and financial needs." 
+      desc: "Join millions of Indians who trust Cloud income for their daily payments and financial needs." 
     },
     {
       icon: Lock,
@@ -96,7 +96,7 @@ function Home() {
     {
       name: "Rahul Sharma",
       role: "Business Owner",
-      content: "PhonePe has revolutionized how I accept payments. It's fast, secure, and my customers love it!",
+      content: "Cloud income has revolutionized how I accept payments. It's fast, secure, and my customers love it!",
       rating: 5
     },
     {
@@ -118,57 +118,7 @@ function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 text-white py-24 px-6 relative overflow-hidden">
-        <Suspense fallback={null}>
-          <HeroDecorations />
-        </Suspense>
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <div className="mb-6 inline-block">
-            <span className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold border border-white/30">
-              ✨ Trusted by 61+ Crore Indians
-            </span>
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            {user ? (
-              <>
-                Welcome back,<br />
-                <span className="bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">
-                  {user.name || "User"}!
-                </span>
-              </>
-            ) : (
-              <>
-                India's Most<br />
-                <span className="bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">
-                  Trusted Payments App
-                </span>
-              </>
-            )}
-          </h1>
-          <p className="text-xl md:text-2xl mb-10 opacity-95 max-w-3xl mx-auto leading-relaxed">
-            {user 
-              ? "Manage your money, pay bills, and send money to anyone, anywhere with just a few taps."
-              : "Pay, send money, recharge, pay bills, book flights & movie tickets, and do a lot more. Simple, fast, and secure."}
-          </p>
-          {!user && (
-            <div className="flex gap-4 justify-center">
-              <Link
-                to="/signup"
-                className="px-10 py-4 bg-white text-purple-700 rounded-full font-bold hover:bg-gray-100 transition-all shadow-2xl hover:scale-105 text-lg"
-              >
-                Get Started Free
-              </Link>
-              <Link
-                to="/login"
-                className="px-10 py-4 border-2 border-white text-white rounded-full font-bold hover:bg-white/10 transition-all backdrop-blur-sm text-lg"
-              >
-                Login
-              </Link>
-            </div>
-          )}
-        </div>
-      </section>
-
+    <Hero />
 
       {/* Stock Market Section */}
       <StockMarketWidget />
@@ -201,7 +151,7 @@ function Home() {
             <div className="max-w-7xl mx-auto relative z-10">
               <div className="text-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                  Why Choose PhonePe?
+                  Why Choose Cloud income?
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                   Experience the best in digital payments with features designed for modern India
@@ -233,7 +183,7 @@ function Home() {
                   Loved by Millions
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  See what our users have to say about their PhonePe experience
+                  See what our users have to say about their Cloud income experience
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

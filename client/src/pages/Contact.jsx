@@ -89,7 +89,7 @@ const handleSubmit = (e) => {
     {
       icon: MapPin,
       title: "Office Address",
-      details: "PhonePe Tower, Bangalore",
+      details: "Cloud income Tower, Bangalore",
       description: "Visit us Monday - Friday, 9 AM - 6 PM",
       color: "bg-purple-500"
     },
