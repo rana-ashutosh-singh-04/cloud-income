@@ -4,6 +4,7 @@ import Card from "../components/card";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
 import Footer from "../components/Footer";
+
 export default function Signup() {
   const nav = useNavigate();
   const { signup } = useAuth();
@@ -32,12 +33,12 @@ export default function Signup() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-[#faf5ee]">
       <Navbar />
 
-      <main className="max-w-md mx-auto px-4 py-8">
-        <Card>
-          <h2 className="text-2xl font-semibold mb-6 text-center text-purple-700">
+      <main className="w-full max-w-md mx-auto px-4 py-8 flex-1 flex flex-col justify-center">
+        <Card className="shadow-[0_2px_16px_rgba(58,48,42,0.06)] border border-[rgba(216,208,200,0.7)] bg-[#ffffff] p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center text-[#2a1f17]">
             Create Your Account
           </h2>
 
@@ -48,7 +49,7 @@ export default function Signup() {
               value={form.name}
               onChange={handleChange}
               placeholder="Full Name"
-              className="bg-gray-100 border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none"
+              className="bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] px-4 py-2 focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] placeholder-[#8c7e72] transition"
               required
             />
 
@@ -58,7 +59,7 @@ export default function Signup() {
               value={form.phone}
               onChange={handleChange}
               placeholder="Phone Number"
-              className="bg-gray-100 border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none"
+              className="bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] px-4 py-2 focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] placeholder-[#8c7e72] transition"
               required
             />
 
@@ -68,7 +69,7 @@ export default function Signup() {
               value={form.vpa}
               onChange={handleChange}
               placeholder="UPI ID (e.g. name@pay)"
-              className="bg-gray-100 border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none"
+              className="bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] px-4 py-2 focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] placeholder-[#8c7e72] transition"
               required
             />
 
@@ -79,33 +80,34 @@ export default function Signup() {
               onChange={handleChange}
               type="password"
               placeholder="Set PIN"
-              className="bg-gray-100 border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none"
+              className="bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] px-4 py-2 focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] placeholder-[#8c7e72] transition"
               required
             />
 
             {/* Submit Button */}
-            <button className="bg-purple-700 text-white rounded-lg py-2 text-sm font-medium hover:bg-purple-800 transition">
+            <button className="bg-[#c2652a] text-white rounded-[8px] py-2.5 mt-2 font-semibold text-[15px] hover:bg-[#a8541f] transition-all">
               Create Account
             </button>
           </form>
 
           {/* Error Message */}
           {err && (
-            <div className="text-sm mt-3 text-rose-600 text-center font-medium">
+            <div className="text-sm mt-4 text-[#8c3c3c] text-center font-medium bg-[#8c3c3c]/10 py-2 rounded-lg border border-[#8c3c3c]/20">
               {err}
             </div>
           )}
 
           {/* Already have account */}
-          <p className="text-sm mt-4 text-center">
+          <p className="text-sm mt-6 text-center text-[#605850]">
             Already have an account?{" "}
-            <Link to="/login" className="text-purple-700 font-medium hover:underline">
+            <Link to="/login" className="text-[#c2652a] font-semibold hover:underline">
               Login
             </Link>
           </p>
         </Card>
       </main>
-      <Footer></Footer>
+      
+      <Footer />
     </div>
   );
 }

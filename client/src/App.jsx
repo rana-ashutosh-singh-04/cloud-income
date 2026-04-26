@@ -23,7 +23,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen bg-[#faf5ee] text-[#4a3d33]">
       <Routes>
         {/* 🏠 Everyone can see Home */}
         <Route path="/" element={<Home />} />

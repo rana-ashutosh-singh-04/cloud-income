@@ -66,10 +66,10 @@ const OptimizedImage = ({
   if (imageError) {
     return (
       <div 
-        className={`bg-gray-200 flex items-center justify-center ${className}`}
+        className={`bg-[#f3ece0] flex items-center justify-center ${className}`}
         style={containerStyle}
       >
-        <span className="text-gray-400 text-sm">Image failed to load</span>
+        <span className="text-[#8c7e72] text-sm">Image failed to load</span>
       </div>
     );
   }
@@ -84,7 +84,7 @@ const OptimizedImage = ({
       {/* Blur placeholder */}
       {placeholder === "blur" && !imageLoaded && (
         <div 
-          className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse"
+          className="absolute inset-0 bg-gradient-to-r from-[#f3ece0] via-[#faf5ee] to-[#f3ece0] animate-pulse"
           style={{
             filter: "blur(10px)",
             transform: "scale(1.1)",
@@ -109,7 +109,3 @@ const OptimizedImage = ({
 };
 
 export default OptimizedImage;
-
-
-
-

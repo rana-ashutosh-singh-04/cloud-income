@@ -29,25 +29,25 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#faf5ee]">
       <Navbar />
 
-      <main className="flex flex-col items-center px-4 mt-10 mb-16 flex-1">
-        <Card className="w-full max-w-md shadow-lg">
-          <h2 className="text-3xl font-bold text-center text-purple-700 mb-8">
+      <main className="flex flex-col items-center justify-center px-4 mt-10 mb-16 flex-1">
+        <Card className="w-full max-w-md shadow-[0_2px_16px_rgba(58,48,42,0.06)] border border-[rgba(216,208,200,0.7)] bg-[#ffffff] p-8">
+          <h2 className="text-3xl font-bold text-center text-[#2a1f17] mb-8">
             Welcome Back
           </h2>
 
           <form onSubmit={submit} className="grid gap-5 text-sm">
             {/* Phone Number */}
             <div className="flex flex-col">
-              <label className="text-gray-600 mb-1 font-medium">
+              <label className="text-[#605850] mb-1 font-medium">
                 Phone Number
               </label>
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="bg-gray-100 border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-600 outline-none text-[15px]"
+                className="bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] px-4 py-2.5 focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] transition"
                 placeholder="Enter your phone number"
                 required
               />
@@ -55,36 +55,36 @@ export default function Login() {
 
             {/* PIN */}
             <div className="flex flex-col">
-              <label className="text-gray-600 mb-1 font-medium">PIN</label>
+              <label className="text-[#605850] mb-1 font-medium">PIN</label>
               <input
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
                 type="password"
-                className="bg-gray-100 border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-600 outline-none text-[15px]"
+                className="bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] px-4 py-2.5 focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] transition"
                 placeholder="Enter your PIN"
                 required
               />
             </div>
 
             {/* Login Button */}
-            <button className="bg-purple-700 text-white rounded-lg py-3 mt-2 font-semibold text-[15px] hover:bg-purple-800 transition-all">
+            <button className="bg-[#c2652a] text-white rounded-[8px] py-3 mt-2 font-semibold text-[15px] hover:bg-[#a8541f] transition-all">
               Login
             </button>
           </form>
 
           {/* Error Message */}
           {err && (
-            <div className="text-sm mt-4 text-rose-600 text-center font-medium bg-rose-50 py-2 rounded-lg border border-rose-200">
+            <div className="text-sm mt-4 text-[#8c3c3c] text-center font-medium bg-[#8c3c3c]/10 py-2 rounded-lg border border-[#8c3c3c]/20">
               {err}
             </div>
           )}
 
           {/* Signup Option */}
-          <p className="text-sm mt-6 text-center text-gray-700">
+          <p className="text-sm mt-6 text-center text-[#605850]">
             Don’t have an account?{" "}
             <Link
               to="/signup"
-              className="text-purple-700 font-semibold hover:underline"
+              className="text-[#c2652a] font-semibold hover:underline"
             >
               Create one
             </Link>

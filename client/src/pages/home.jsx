@@ -6,39 +6,40 @@ import LazySection from "../components/LazySection";
 
 // Lazy load heavy components for code splitting (Next.js-like optimization)
 const Footer = lazy(() => import("../components/Footer"));
-import Hero  from "../components/Hero";
+import Hero from "../components/Hero";
 import FeatureHighlight from "../components/FeatureHighlight";
 import TestimonialCard from "../components/TestimonialCard";
 import StockMarketWidget from "../components/StockMarketWidget";
+import LandingContent from "../components/LandingContent";
 
 import { useAuth } from "../hooks/useAuth";
 
 // Loading fallback component
 const SectionLoader = () => (
   <div className="flex items-center justify-center min-h-[400px]">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c2652a]"></div>
   </div>
 );
 
 // Memoized Service Card Component for better performance
 const ServiceCard = memo(({ service, index }) => {
   const Icon = service.icon;
-  
+
   return (
     <Link
       to={service.link}
-      className="bg-white rounded-2xl p-6 shadow-md hover:shadow-2xl transition-all text-center group relative overflow-hidden border border-gray-100 hover:border-purple-200"
+      className="bg-white rounded-[16px] p-6 shadow-[0_2px_16px_rgba(58,48,42,0.06)] hover:shadow-xl transition-all text-center group relative overflow-hidden border border-[rgba(216,208,200,0.7)] hover:border-[#c2652a]"
     >
       {/* Hover Gradient Background */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-      
-      <div className={`${service.color} w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg relative z-10`}>
+      <div className={`absolute inset-0 bg-gradient-to-br from-[#c2652a] to-[#a8541f] opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+
+      <div className={`bg-[#c2652a] w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg relative z-10`}>
         <Icon className="w-8 h-8 text-white" />
       </div>
-      <h3 className="font-bold text-gray-900 mb-1 group-hover:text-purple-700 transition-colors relative z-10">
+      <h3 className="font-bold text-[#2a1f17] mb-1 group-hover:text-[#c2652a] transition-colors relative z-10">
         {service.title}
       </h3>
-      <p className="text-xs text-gray-600 relative z-10">{service.desc}</p>
+      <p className="text-xs text-[#8c7e72] relative z-10">{service.desc}</p>
     </Link>
   );
 });
@@ -50,30 +51,30 @@ function Home() {
 
   // Memoize data to prevent unnecessary re-renders (Next.js-like optimization)
   const services = useMemo(() => [
-    { icon: Send, title: "Send Money", desc: "Transfer to anyone instantly", link: "/send", color: "bg-blue-500" },
-    { icon: Receipt, title: "Pay Bills", desc: "Electricity, Water & More", link: "/bills", color: "bg-green-500" },
-    { icon: Smartphone, title: "Recharge", desc: "Mobile, DTH & Data Card", link: "/recharge", color: "bg-yellow-500" },
-    { icon: CreditCard, title: "Credit Card", desc: "Pay credit card bills", link: "/credit", color: "bg-purple-500" },
-    { icon: BarChart3, title: "Stock Market", desc: "Trade stocks & track trends", link: "/stocks", color: "bg-indigo-500" },
-    { icon: TrendingUp, title: "Investments", desc: "Mutual Funds & Gold", link: "/invest", color: "bg-orange-500" },
-    { icon: Zap, title: "Insurance", desc: "Health, Life & Travel", link: "/insurance", color: "bg-pink-500" },
+    { icon: Send, title: "Send Money", desc: "Transfer to anyone instantly", link: "/send" },
+    { icon: Receipt, title: "Pay Bills", desc: "Electricity, Water & More", link: "/bills" },
+    { icon: Smartphone, title: "Recharge", desc: "Mobile, DTH & Data Card", link: "/recharge" },
+    { icon: CreditCard, title: "Credit Card", desc: "Pay credit card bills", link: "/credit" },
+    { icon: BarChart3, title: "Stock Market", desc: "Trade stocks & track trends", link: "/stocks" },
+    { icon: TrendingUp, title: "Investments", desc: "Mutual Funds & Gold", link: "/invest" },
+    { icon: Zap, title: "Insurance", desc: "Health, Life & Travel", link: "/insurance" },
   ], []);
 
   const features = useMemo(() => [
-    { 
-      icon: Shield, 
-      title: "100% Secure", 
-      desc: "Bank-grade encryption and security protocols ensure your money stays safe. PCI DSS compliant and ISO 27001 certified." 
+    {
+      icon: Shield,
+      title: "100% Secure",
+      desc: "Bank-grade encryption and security protocols ensure your money stays safe. PCI DSS compliant and ISO 27001 certified."
     },
-    { 
-      icon: Zap, 
-      title: "Instant Payments", 
-      desc: "Transfer money to anyone, anywhere in seconds. No waiting, no delays - just instant transactions." 
+    {
+      icon: Zap,
+      title: "Instant Payments",
+      desc: "Transfer money to anyone, anywhere in seconds. No waiting, no delays - just instant transactions."
     },
-    { 
-      icon: Users, 
-      title: "61+ Crore Users", 
-      desc: "Join millions of Indians who trust Cloud income for their daily payments and financial needs." 
+    {
+      icon: Users,
+      title: "61+ Crore Users",
+      desc: "Join millions of Indians who trust Cloud income for their daily payments and financial needs."
     },
     {
       icon: Lock,
@@ -114,22 +115,27 @@ function Home() {
   ], []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#faf5ee]">
       <Navbar />
 
       {/* Hero Section */}
-    <Hero />
+      <Hero />
+      
+      {/* New Landing Content based on image reference */}
+      <LandingContent />
 
       {/* Stock Market Section */}
-      <StockMarketWidget />
+      <div className="bg-white">
+        <StockMarketWidget />
+      </div>
 
       {/* Services Grid */}
       <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#2a1f17] mb-4">
             {user ? "Quick Actions" : "All Payment Solutions"}
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-[#605850] max-w-2xl mx-auto">
             Everything you need for seamless digital payments, all in one place
           </p>
         </div>
@@ -147,7 +153,7 @@ function Home() {
             {/* Background Decoration */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl"></div>
-            
+
             <div className="max-w-7xl mx-auto relative z-10">
               <div className="text-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -176,13 +182,13 @@ function Home() {
       {/* Testimonials Section - Lazy Loaded */}
       {!user && (
         <LazySection fallback={<SectionLoader />}>
-          <section className="bg-white py-20 px-6">
+          <section className="bg-[#f3ece0] py-20 px-6 border-t border-[rgba(216,208,200,0.7)]">
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                <h2 className="text-4xl md:text-5xl font-bold text-[#2a1f17] mb-4">
                   Loved by Millions
                 </h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                <p className="text-lg text-[#605850] max-w-2xl mx-auto">
                   See what our users have to say about their Cloud income experience
                 </p>
               </div>
@@ -204,7 +210,7 @@ function Home() {
       )}
 
       {/* Footer - Lazy Loaded */}
-      <Suspense fallback={<div className="min-h-[400px] bg-gray-50"></div>}>
+      <Suspense fallback={<div className="min-h-[400px] bg-[#faf5ee]"></div>}>
         <Footer />
       </Suspense>
     </div>

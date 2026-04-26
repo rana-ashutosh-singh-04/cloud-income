@@ -17,28 +17,24 @@ const rechargeTypes = [
     id: "mobile",
     name: "Mobile",
     icon: Smartphone,
-    color: "from-blue-500 to-cyan-500",
     operators: ["Airtel", "Jio", "Vi", "BSNL"],
   },
   {
     id: "dth",
     name: "DTH",
     icon: Tv,
-    color: "from-red-500 to-pink-500",
     operators: ["Tata Sky", "Dish TV", "Airtel Digital", "Sun Direct"],
   },
   {
     id: "data",
     name: "Data Card",
     icon: Wifi,
-    color: "from-purple-500 to-indigo-500",
     operators: ["JioFi", "Airtel Xstream", "BSNL Data Card"],
   },
   {
     id: "electricity",
     name: "Electricity",
     icon: Zap,
-    color: "from-yellow-500 to-orange-500",
     operators: ["BSES", "Tata Power", "Adani Electricity"],
   },
 ];
@@ -83,15 +79,15 @@ export default function Recharge() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-cyan-50/30">
+    <div className="min-h-screen bg-[#faf5ee]">
       <Navbar />
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#2a1f17] mb-3">
             Recharge & Top-up
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-[#605850]">
             Recharge your mobile, DTH, data card, and more
           </p>
         </div>
@@ -99,8 +95,8 @@ export default function Recharge() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Recharge Types */}
           <div className="lg:col-span-1">
-            <Card className="shadow-xl rounded-2xl p-6 border border-gray-100">
-              <h3 className="font-bold text-lg text-gray-900 mb-4">Recharge Type</h3>
+            <Card className="bg-[#ffffff] shadow-[0_2px_16px_rgba(58,48,42,0.06)] rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)]">
+              <h3 className="font-bold text-lg text-[#2a1f17] mb-4">Recharge Type</h3>
               <div className="space-y-3">
                 {rechargeTypes.map((type) => {
                   const Icon = type.icon;
@@ -114,10 +110,10 @@ export default function Recharge() {
                         setAmount("");
                         setStatus("");
                       }}
-                      className={`w-full p-4 rounded-xl transition-all text-left ${
+                      className={`w-full p-4 rounded-[12px] transition-all text-left ${
                         selectedType === type.id
-                          ? "bg-gradient-to-r " + type.color + " text-white shadow-lg"
-                          : "bg-white hover:bg-gray-50 border-2 border-gray-200 text-gray-900"
+                          ? "bg-[#c2652a] text-white shadow-[0_2px_16px_rgba(58,48,42,0.06)] transform scale-[1.02]"
+                          : "bg-[#ffffff] hover:bg-[#faf5ee] border border-[rgba(216,208,200,0.7)] text-[#4a3d33]"
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -133,25 +129,25 @@ export default function Recharge() {
 
           {/* Main Form */}
           <div className="lg:col-span-2">
-            <Card className="shadow-xl rounded-2xl p-8 border border-gray-100">
+            <Card className="bg-[#ffffff] shadow-[0_2px_16px_rgba(58,48,42,0.06)] rounded-[16px] p-8 border border-[rgba(216,208,200,0.7)]">
               <div className="flex items-center gap-4 mb-6">
                 <div
-                  className={`p-4 bg-gradient-to-r ${currentType.color} rounded-xl text-white`}
+                  className="p-4 bg-[#c2652a]/10 border border-[#c2652a]/20 rounded-[12px] text-[#c2652a]"
                 >
                   <currentType.icon className="w-8 h-8" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
+                  <h2 className="text-2xl font-bold text-[#2a1f17]">
                     {currentType.name} Recharge
                   </h2>
-                  <p className="text-gray-600">Select operator and enter details</p>
+                  <p className="text-[#605850]">Select operator and enter details</p>
                 </div>
               </div>
 
               <div className="space-y-6">
                 {/* Operator Selection */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#605850] mb-2">
                     Select Operator
                   </label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -159,10 +155,10 @@ export default function Recharge() {
                       <button
                         key={operator}
                         onClick={() => setSelectedOperator(operator)}
-                        className={`p-4 rounded-xl border-2 transition ${
+                        className={`p-4 rounded-[8px] border transition ${
                           selectedOperator === operator
-                            ? "border-purple-500 bg-purple-50 text-purple-700 font-semibold"
-                            : "border-gray-200 hover:border-purple-300 bg-white text-gray-700"
+                            ? "border-[#c2652a] bg-[#c2652a]/5 text-[#c2652a] font-semibold shadow-[0_2px_8px_rgba(194,101,42,0.15)]"
+                            : "border-[rgba(216,208,200,0.7)] hover:border-[#c2652a]/50 bg-white text-[#4a3d33]"
                         }`}
                       >
                         {operator}
@@ -173,7 +169,7 @@ export default function Recharge() {
 
                 {/* Phone Number */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#605850] mb-2">
                     {selectedType === "mobile" ? "Mobile Number" : "Account Number"}
                   </label>
                   <input
@@ -182,13 +178,13 @@ export default function Recharge() {
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     placeholder={selectedType === "mobile" ? "10-digit mobile number" : "Account number"}
                     maxLength={selectedType === "mobile" ? 10 : undefined}
-                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg"
+                    className="w-full px-4 py-4 bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] text-lg transition"
                   />
                 </div>
 
                 {/* Amount */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#605850] mb-2">
                     Amount (₹)
                   </label>
                   <input
@@ -197,14 +193,14 @@ export default function Recharge() {
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="Enter amount"
                     min="1"
-                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg font-semibold"
+                    className="w-full px-4 py-4 bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] text-lg font-semibold transition"
                   />
                 </div>
 
                 {/* Quick Plans (for mobile) */}
                 {selectedType === "mobile" && selectedOperator && (
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    <label className="block text-sm font-semibold text-[#605850] mb-3">
                       Popular Plans
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -212,14 +208,14 @@ export default function Recharge() {
                         <button
                           key={index}
                           onClick={() => setAmount(plan.amount.toString())}
-                          className={`p-4 rounded-xl border-2 transition text-left ${
+                          className={`p-4 rounded-[8px] border transition text-left ${
                             amount === plan.amount.toString()
-                              ? "border-purple-500 bg-purple-50"
-                              : "border-gray-200 hover:border-purple-300 bg-white"
+                              ? "border-[#c2652a] bg-[#c2652a]/5 shadow-[0_2px_8px_rgba(194,101,42,0.15)]"
+                              : "border-[rgba(216,208,200,0.7)] hover:border-[#c2652a]/50 bg-white"
                           }`}
                         >
-                          <div className="font-bold text-lg text-gray-900">₹{plan.amount}</div>
-                          <div className="text-xs text-gray-600 mt-1">
+                          <div className="font-bold text-lg text-[#2a1f17]">₹{plan.amount}</div>
+                          <div className="text-xs text-[#8c7e72] mt-1">
                             {plan.validity} • {plan.data}
                           </div>
                         </button>
@@ -229,15 +225,15 @@ export default function Recharge() {
                 )}
 
                 {/* Balance Display */}
-                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-200">
+                <div className="bg-[#f3ece0] rounded-[12px] p-4 border border-[rgba(216,208,200,0.7)]">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Wallet className="w-5 h-5 text-blue-600" />
-                      <span className="text-sm font-medium text-gray-700">
+                      <Wallet className="w-5 h-5 text-[#c2652a]" />
+                      <span className="text-sm font-medium text-[#605850]">
                         Available Balance
                       </span>
                     </div>
-                    <span className="text-xl font-bold text-gray-900">
+                    <span className="text-xl font-bold text-[#2a1f17]">
                       ₹{Number(user?.balance || 0).toLocaleString("en-IN", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
@@ -249,12 +245,12 @@ export default function Recharge() {
                 {/* Status Message */}
                 {status && (
                   <div
-                    className={`p-4 rounded-xl border-2 ${
+                    className={`p-4 rounded-xl border ${
                       status.type === "success"
                         ? "bg-green-50 border-green-200 text-green-800"
                         : status.type === "loading"
-                        ? "bg-blue-50 border-blue-200 text-blue-800"
-                        : "bg-red-50 border-red-200 text-red-800"
+                        ? "bg-[#f3ece0] border-[rgba(216,208,200,0.7)] text-[#4a3d33]"
+                        : "bg-[#8c3c3c]/10 border-[#8c3c3c]/20 text-[#8c3c3c]"
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -268,7 +264,7 @@ export default function Recharge() {
                 <button
                   onClick={handleRecharge}
                   disabled={!selectedOperator || !phoneNumber || !amount || status.type === "loading"}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-bold text-lg hover:from-blue-700 hover:to-cyan-700 transition-all transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#c2652a] text-white rounded-[8px] font-bold text-lg hover:bg-[#a8541f] transition-all transform hover:scale-[1.02] shadow-[0_2px_16px_rgba(58,48,42,0.06)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {status.type === "loading" ? (
                     <>
@@ -290,5 +286,3 @@ export default function Recharge() {
     </div>
   );
 }
-
-

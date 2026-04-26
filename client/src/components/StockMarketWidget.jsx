@@ -116,7 +116,7 @@ export default function StockMarketWidget() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c2652a]"></div>
       </div>
     );
   }
@@ -125,7 +125,7 @@ export default function StockMarketWidget() {
     <section className="max-w-7xl mx-auto px-6 py-16 bg-gradient-to-br from-gray-50 to-white">
       <div className="text-center mb-12">
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-3">
-          <BarChart3 className="w-10 h-10 text-purple-600" />
+          <BarChart3 className="w-10 h-10 text-[#c2652a]" />
           Stock Market
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -143,7 +143,7 @@ export default function StockMarketWidget() {
               {user && (
                 <Link
                   to="/stocks"
-                  className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center gap-1"
+                  className="text-[#c2652a] hover:text-[#a55220] font-semibold text-sm flex items-center gap-1"
                 >
                   View All <ArrowUpRight className="w-4 h-4" />
                 </Link>
@@ -158,8 +158,8 @@ export default function StockMarketWidget() {
                     onClick={() => setSelectedStock(stock)}
                     className={`p-4 rounded-xl border-2 transition ${
                       selectedStock?.symbol === stock.symbol
-                        ? "border-purple-500 bg-purple-50"
-                        : "border-gray-200 hover:border-purple-300 bg-white"
+                        ? "border-[#c2652a] bg-[#c2652a]/5"
+                        : "border-gray-200 hover:border-[#c2652a]/40 bg-white"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -226,8 +226,8 @@ export default function StockMarketWidget() {
                 <AreaChart data={priceHistory.slice(-15)}>
                   <defs>
                     <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#9333ea" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#9333ea" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#c2652a" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#c2652a" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -253,7 +253,7 @@ export default function StockMarketWidget() {
                   <Area
                     type="monotone"
                     dataKey="price"
-                    stroke="#9333ea"
+                    stroke="#c2652a"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#colorPrice)"
@@ -268,17 +268,17 @@ export default function StockMarketWidget() {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-20">
             <div className="flex items-center gap-2 mb-4">
-              <Newspaper className="w-5 h-5 text-purple-600" />
+              <Newspaper className="w-5 h-5 text-[#c2652a]" />
               <h3 className="font-bold text-xl text-gray-900">Market News</h3>
             </div>
             <div className="space-y-4 max-h-[600px] overflow-y-auto">
               {news.map((item) => (
                 <div
                   key={item.id}
-                  className="p-4 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 hover:border-purple-300 transition cursor-pointer"
+                  className="p-4 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 hover:border-[#c2652a]/40 transition cursor-pointer"
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-1 rounded-full">
+                    <span className="text-xs font-semibold text-[#c2652a] bg-[#c2652a]/10 px-2 py-1 rounded-full">
                       {item.category}
                     </span>
                     <span className="text-xs text-gray-500">{item.time}</span>
@@ -289,13 +289,13 @@ export default function StockMarketWidget() {
               ))}
             </div>
             {!user && (
-              <div className="mt-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
-                <p className="text-sm text-gray-700 mb-3">
+              <div className="mt-6 p-4 bg-[#c2652a]/5 rounded-xl border border-[#c2652a]/20">
+                <p className="text-sm text-[#2a1f17] mb-3 font-medium">
                   Sign in to access full market data and start trading
                 </p>
                 <Link
                   to="/signup"
-                  className="block w-full text-center px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+                  className="block w-full text-center px-4 py-2 bg-[#c2652a] text-white rounded-lg font-semibold hover:bg-[#a55220] transition"
                 >
                   Get Started
                 </Link>

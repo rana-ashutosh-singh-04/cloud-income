@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Warm linen background -->
+  <rect width="32" height="32" rx="6" fill="#faf5ee"/>
+  <!-- Sienna dot -->
+  <circle cx="9" cy="13" r="3.5" fill="#c2652a"/>
+  <!-- "CI" text -->
+  <text x="15" y="12" font-family="Georgia, serif" font-size="7" font-weight="600" fill="#2a1f17">Cloud</text>
+  <text x="15" y="21" font-family="Georgia, serif" font-size="7" font-weight="600" fill="#2a1f17">Income</text>
+</svg>

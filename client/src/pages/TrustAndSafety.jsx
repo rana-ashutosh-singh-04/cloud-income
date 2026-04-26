@@ -88,14 +88,14 @@ export default function TrustAndSafety() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#faf5ee]">
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 text-white py-20 px-6">
+      <section className="bg-[#c2652a] text-white py-20 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <Shield className="w-16 h-16 mx-auto mb-6" />
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">
+          <Shield className="w-16 h-16 mx-auto mb-6 text-[#ffffff]" />
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-[#ffffff]">
             Trust & Safety
           </h1>
           <p className="text-xl opacity-90 max-w-3xl mx-auto">
@@ -111,10 +111,10 @@ export default function TrustAndSafety() {
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <div key={index} className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-100 text-center">
-                <Icon className="w-10 h-10 text-purple-600 mx-auto mb-4" />
-                <p className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</p>
-                <p className="text-sm text-gray-600">{stat.label}</p>
+              <div key={index} className="bg-[#ffffff] rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)] text-center">
+                <Icon className="w-10 h-10 text-[#c2652a] mx-auto mb-4" />
+                <p className="text-3xl font-bold text-[#2a1f17] mb-2">{stat.value}</p>
+                <p className="text-sm text-[#8c7e72]">{stat.label}</p>
               </div>
             );
           })}
@@ -122,11 +122,11 @@ export default function TrustAndSafety() {
       </section>
 
       {/* Security Features */}
-      <section className="bg-gray-50 py-16 px-6">
+      <section className="bg-[#f3ece0] py-16 px-6 border-t border-b border-[rgba(216,208,200,0.7)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Security Features</h2>
-            <p className="text-lg text-gray-600">
+            <h2 className="text-4xl font-bold text-[#2a1f17] mb-4">Security Features</h2>
+            <p className="text-lg text-[#605850]">
               Multiple layers of protection to keep your account and transactions secure
             </p>
           </div>
@@ -134,12 +134,12 @@ export default function TrustAndSafety() {
             {securityFeatures.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div key={index} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                    <Icon className="w-6 h-6 text-purple-600" />
+                <div key={index} className="bg-[#ffffff] rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)] hover:shadow-lg transition-shadow">
+                  <div className="w-12 h-12 bg-[#c2652a]/10 rounded-[12px] flex items-center justify-center mb-4">
+                    <Icon className="w-6 h-6 text-[#c2652a]" />
                   </div>
-                  <h3 className="font-bold text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-sm text-gray-600">{feature.description}</p>
+                  <h3 className="font-bold text-[#2a1f17] mb-2">{feature.title}</h3>
+                  <p className="text-sm text-[#8c7e72]">{feature.description}</p>
                 </div>
               );
             })}
@@ -150,8 +150,8 @@ export default function TrustAndSafety() {
       {/* Certifications */}
       <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Certifications & Compliance</h2>
-          <p className="text-lg text-gray-600">
+          <h2 className="text-4xl font-bold text-[#2a1f17] mb-4">Certifications & Compliance</h2>
+          <p className="text-lg text-[#605850]">
             We meet the highest industry standards for security and compliance
           </p>
         </div>
@@ -159,10 +159,10 @@ export default function TrustAndSafety() {
           {certifications.map((cert, index) => {
             const Icon = cert.icon;
             return (
-              <div key={index} className="bg-white rounded-xl p-6 border-2 border-purple-100 text-center hover:border-purple-300 transition">
-                <Icon className="w-10 h-10 text-purple-600 mx-auto mb-4" />
-                <h3 className="font-bold text-gray-900 mb-2">{cert.name}</h3>
-                <p className="text-xs text-gray-600">{cert.description}</p>
+              <div key={index} className="bg-[#ffffff] rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)] text-center hover:border-[#c2652a] transition">
+                <Icon className="w-10 h-10 text-[#c2652a] mx-auto mb-4" />
+                <h3 className="font-bold text-[#2a1f17] mb-2">{cert.name}</h3>
+                <p className="text-xs text-[#8c7e72]">{cert.description}</p>
               </div>
             );
           })}
@@ -170,11 +170,11 @@ export default function TrustAndSafety() {
       </section>
 
       {/* Safety Tips */}
-      <section className="bg-gradient-to-br from-purple-50 to-indigo-50 py-16 px-6">
+      <section className="bg-[#f3ece0] py-16 px-6 border-t border-b border-[rgba(216,208,200,0.7)]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Safety Tips</h2>
-            <p className="text-lg text-gray-600">
+            <h2 className="text-4xl font-bold text-[#2a1f17] mb-4">Safety Tips</h2>
+            <p className="text-lg text-[#605850]">
               Follow these tips to keep your account and transactions safe
             </p>
           </div>
@@ -182,14 +182,14 @@ export default function TrustAndSafety() {
             {safetyTips.map((tip, index) => {
               const Icon = tip.icon;
               return (
-                <div key={index} className="bg-white rounded-xl p-6 border border-gray-200">
+                <div key={index} className="bg-[#ffffff] rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-6 h-6 text-orange-600" />
+                    <div className="w-12 h-12 bg-[#c2652a]/10 rounded-[12px] flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-6 h-6 text-[#c2652a]" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 mb-2">{tip.title}</h3>
-                      <p className="text-sm text-gray-600">{tip.description}</p>
+                      <h3 className="font-bold text-[#2a1f17] mb-2">{tip.title}</h3>
+                      <p className="text-sm text-[#8c7e72]">{tip.description}</p>
                     </div>
                   </div>
                 </div>
@@ -201,12 +201,12 @@ export default function TrustAndSafety() {
 
       {/* Report Security Issue */}
       <section className="max-w-7xl mx-auto px-6 py-16">
-        <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl p-8 text-white">
+        <div className="bg-[#8c3c3c] rounded-[16px] p-8 text-white shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
           <div className="flex items-start gap-4 mb-6">
-            <AlertTriangle className="w-8 h-8 flex-shrink-0" />
+            <AlertTriangle className="w-8 h-8 flex-shrink-0 text-[#ffffff]" />
             <div>
-              <h2 className="text-3xl font-bold mb-2">Report a Security Issue</h2>
-              <p className="text-lg opacity-90">
+              <h2 className="text-3xl font-bold mb-2 text-[#ffffff]">Report a Security Issue</h2>
+              <p className="text-lg opacity-90 text-[#ffffff]">
                 If you've noticed any suspicious activity or believe your account has been compromised, 
                 contact us immediately. We take security issues very seriously.
               </p>
@@ -215,13 +215,13 @@ export default function TrustAndSafety() {
           <div className="flex flex-col sm:flex-row gap-4">
             <a 
               href="mailto:security@Cloudincome.com" 
-              className="px-6 py-3 bg-white text-red-700 rounded-xl font-semibold hover:bg-gray-100 transition text-center"
+              className="px-6 py-3 bg-[#ffffff] text-[#8c3c3c] rounded-[8px] font-semibold hover:bg-[#faf5ee] transition text-center"
             >
               Email Security Team
             </a>
             <Link
               to="/contact"
-              className="px-6 py-3 border-2 border-white text-white rounded-xl font-semibold hover:bg-white/10 transition text-center"
+              className="px-6 py-3 border border-white text-[#ffffff] rounded-[8px] font-semibold hover:bg-white/10 transition text-center"
             >
               Contact Support
             </Link>
@@ -231,20 +231,20 @@ export default function TrustAndSafety() {
 
       {/* Privacy Policy Link */}
       <section className="max-w-7xl mx-auto px-6 pb-16">
-        <div className="bg-white rounded-2xl p-8 border border-gray-200 text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Learn More</h3>
-          <p className="text-gray-600 mb-6">
+        <div className="bg-[#ffffff] rounded-[16px] p-8 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)] text-center">
+          <h3 className="text-2xl font-bold text-[#2a1f17] mb-4">Learn More</h3>
+          <p className="text-[#605850] mb-6">
             Read our comprehensive privacy policy and terms of service to understand 
             how we protect and handle your data.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="#" className="px-6 py-3 bg-purple-100 text-purple-700 rounded-xl font-semibold hover:bg-purple-200 transition">
+            <a href="#" className="px-6 py-3 bg-[#c2652a]/10 border border-[#c2652a]/20 text-[#c2652a] rounded-[8px] font-semibold hover:bg-[#c2652a]/20 transition">
               Privacy Policy
             </a>
-            <a href="#" className="px-6 py-3 bg-purple-100 text-purple-700 rounded-xl font-semibold hover:bg-purple-200 transition">
+            <a href="#" className="px-6 py-3 bg-[#c2652a]/10 border border-[#c2652a]/20 text-[#c2652a] rounded-[8px] font-semibold hover:bg-[#c2652a]/20 transition">
               Terms of Service
             </a>
-            <a href="#" className="px-6 py-3 bg-purple-100 text-purple-700 rounded-xl font-semibold hover:bg-purple-200 transition">
+            <a href="#" className="px-6 py-3 bg-[#c2652a]/10 border border-[#c2652a]/20 text-[#c2652a] rounded-[8px] font-semibold hover:bg-[#c2652a]/20 transition">
               Cookie Policy
             </a>
           </div>
@@ -255,4 +255,3 @@ export default function TrustAndSafety() {
     </div>
   );
 }
-

@@ -29,8 +29,8 @@ export default function HeroBackgroundSlider({ activeIndex }) {
       ))}
 
       {/* overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/80" />
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/30 via-transparent to-indigo-900/30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-[#faf5ee]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#c2652a]/20 via-transparent to-[#8c3c3c]/20" />
     </div>
   );
 }

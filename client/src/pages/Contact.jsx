@@ -76,29 +76,25 @@ const handleSubmit = (e) => {
       icon: Phone,
       title: "Phone Support",
       details: "+91-620-228-5568",
-      description: "24/7 customer support",
-      color: "bg-blue-500"
+      description: "24/7 customer support"
     },
     {
       icon: Mail,
       title: "Email Support",
       details: "singhrananshutosh6@gmail.com",
-      description: "We'll respond within 24 hours",
-      color: "bg-green-500"
+      description: "We'll respond within 24 hours"
     },
     {
       icon: MapPin,
       title: "Office Address",
       details: "Cloud income Tower, Bangalore",
-      description: "Visit us Monday - Friday, 9 AM - 6 PM",
-      color: "bg-purple-500"
+      description: "Visit us Monday - Friday, 9 AM - 6 PM"
     },
     {
       icon: Clock,
       title: "Business Hours",
       details: "24/7 Support Available",
-      description: "Customer service always ready",
-      color: "bg-orange-500"
+      description: "Customer service always ready"
     }
   ];
 
@@ -109,13 +105,13 @@ const handleSubmit = (e) => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#faf5ee]">
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 text-white py-20 px-6">
+      <section className="bg-[#c2652a] text-white py-20 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-[#ffffff]">
             Get in Touch
           </h1>
           <p className="text-xl opacity-90 max-w-3xl mx-auto">
@@ -131,13 +127,13 @@ const handleSubmit = (e) => {
           {contactMethods.map((method, index) => {
             const Icon = method.icon;
             return (
-              <div key={index} className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-                <div className={`${method.color} w-12 h-12 rounded-xl flex items-center justify-center mb-4`}>
+              <div key={index} className="bg-[#ffffff] rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)] hover:shadow-xl transition-shadow">
+                <div className={`bg-[#c2652a] w-12 h-12 rounded-[12px] flex items-center justify-center mb-4`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">{method.title}</h3>
-                <p className="text-lg font-semibold text-gray-900 mb-1 break-all">{method.details}</p>
-                <p className="text-sm text-gray-600">{method.description}</p>
+                <h3 className="font-bold text-[#2a1f17] mb-2">{method.title}</h3>
+                <p className="text-lg font-semibold text-[#2a1f17] mb-1 break-all">{method.details}</p>
+                <p className="text-sm text-[#8c7e72]">{method.description}</p>
               </div>
             );
           })}
@@ -146,10 +142,10 @@ const handleSubmit = (e) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl p-8 border border-gray-200">
+            <div className="bg-[#ffffff] rounded-[16px] p-8 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
               <div className="flex items-center gap-3 mb-6">
-                <MessageSquare className="w-6 h-6 text-purple-600" />
-                <h2 className="text-3xl font-bold text-gray-900">Send us a Message</h2>
+                <MessageSquare className="w-6 h-6 text-[#c2652a]" />
+                <h2 className="text-3xl font-bold text-[#2a1f17]">Send us a Message</h2>
               </div>
               
               {submitted && (
@@ -163,7 +159,7 @@ const handleSubmit = (e) => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#605850] mb-2">
                       Your Name *
                     </label>
                     <input
@@ -172,12 +168,12 @@ const handleSubmit = (e) => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33]"
                       placeholder="John Doe"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#605850] mb-2">
                       Email Address *
                     </label>
                     <input
@@ -186,14 +182,14 @@ const handleSubmit = (e) => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33]"
                       placeholder="john@example.com"
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#605850] mb-2">
                     Phone Number
                   </label>
                   <input
@@ -201,13 +197,13 @@ const handleSubmit = (e) => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33]"
                     placeholder="+91 9876543210"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#605850] mb-2">
                     Subject *
                   </label>
                     <select
@@ -215,7 +211,7 @@ const handleSubmit = (e) => {
                       value={formData.subject}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33]"
                     >
                       <option value="">Select a subject</option>
                       <option value="general">General Inquiry</option>
@@ -227,7 +223,7 @@ const handleSubmit = (e) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#605850] mb-2">
                     Message *
                   </label>
                   <textarea
@@ -236,14 +232,14 @@ const handleSubmit = (e) => {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                    className="w-full px-4 py-3 border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] resize-none"
                     placeholder="Tell us how we can help you..."
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-bold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#c2652a] text-white rounded-[8px] font-bold text-lg hover:bg-[#a8541f] transition-all flex items-center justify-center gap-2"
                 >
                   <Send className="w-5 h-5" />
                   Send Message
@@ -254,8 +250,8 @@ const handleSubmit = (e) => {
 
           {/* Quick Links */}
           <div className="space-y-6">
-            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-100">
-              <h3 className="font-bold text-gray-900 mb-4">Quick Links</h3>
+            <div className="bg-[#f3ece0] rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)]">
+              <h3 className="font-bold text-[#2a1f17] mb-4">Quick Links</h3>
               <div className="space-y-4">
                 {quickLinks.map((link, index) => {
                   const Icon = link.icon;
@@ -263,12 +259,12 @@ const handleSubmit = (e) => {
                     <a
                       key={index}
                       href={link.link}
-                      className="flex items-start gap-3 p-3 bg-white rounded-xl hover:shadow-md transition"
+                      className="flex items-start gap-3 p-3 bg-[#ffffff] border border-[rgba(216,208,200,0.7)] rounded-[8px] hover:shadow-md transition"
                     >
-                      <Icon className="w-5 h-5 text-purple-600 mt-0.5" />
+                      <Icon className="w-5 h-5 text-[#c2652a] mt-0.5" />
                       <div>
-                        <p className="font-semibold text-gray-900 text-sm">{link.title}</p>
-                        <p className="text-xs text-gray-600">{link.description}</p>
+                        <p className="font-semibold text-[#2a1f17] text-sm">{link.title}</p>
+                        <p className="text-xs text-[#8c7e72]">{link.description}</p>
                       </div>
                     </a>
                   );
@@ -276,20 +272,20 @@ const handleSubmit = (e) => {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 border border-gray-200">
-              <h3 className="font-bold text-gray-900 mb-4">Response Time</h3>
+            <div className="bg-[#ffffff] rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
+              <h3 className="font-bold text-[#2a1f17] mb-4">Response Time</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Email Support</span>
-                  <span className="font-semibold text-gray-900">Within 24 hours</span>
+                  <span className="text-[#605850]">Email Support</span>
+                  <span className="font-semibold text-[#2a1f17]">Within 24 hours</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Phone Support</span>
-                  <span className="font-semibold text-gray-900">Immediate</span>
+                  <span className="text-[#605850]">Phone Support</span>
+                  <span className="font-semibold text-[#2a1f17]">Immediate</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Live Chat</span>
-                  <span className="font-semibold text-gray-900">Within 5 minutes</span>
+                  <span className="text-[#605850]">Live Chat</span>
+                  <span className="font-semibold text-[#2a1f17]">Within 5 minutes</span>
                 </div>
               </div>
             </div>
@@ -301,4 +297,3 @@ const handleSubmit = (e) => {
     </div>
   );
 }
-

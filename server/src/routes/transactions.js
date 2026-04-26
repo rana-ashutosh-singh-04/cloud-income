@@ -28,12 +28,6 @@ router.post('/send', auth, async (req, res) => {
       return res.status(400).json({ message: 'Invalid amount' })
     }
 
-    // Ensure balance is a number
-    const senderBalance = Number(sender.balance) || 0
-    if (senderBalance < numAmount) {
-      return res.status(400).json({ message: 'Insufficient balance' })
-    }
-
     const receiver = await User.findOne({ vpa })
     if (!receiver) {
       return res.status(404).json({ message: 'Receiver not found' })
@@ -42,6 +36,25 @@ router.post('/send', auth, async (req, res) => {
     if (receiver._id.equals(sender._id)) {
       return res.status(400).json({ message: 'Cannot send money to yourself' })
     }
+
+    // --- ATOMIC BALANCE TRANSFERS ---
+    // 1. Deduct from sender atomically (ensures no race conditions if multiple requests fire simultaneously)
+    const updatedSender = await User.findOneAndUpdate(
+      { _id: sender._id, balance: { $gte: numAmount } },
+      { $inc: { balance: -numAmount } },
+      { new: true }
+    )
+
+    if (!updatedSender) {
+      return res.status(400).json({ message: 'Insufficient balance' })
+    }
+
+    // 2. Add to receiver atomically
+    const updatedReceiver = await User.findByIdAndUpdate(
+      receiver._id,
+      { $inc: { balance: numAmount } },
+      { new: true }
+    )
 
     // Generate unique reference
     const reference = uuidv4()
@@ -67,18 +80,8 @@ router.post('/send', auth, async (req, res) => {
       reference
     })
 
-    // Update balances
-    sender.balance = senderBalance - numAmount
-    receiver.balance = (Number(receiver.balance) || 0) + numAmount
-
-    // 1️⃣ Save balances first
-    await sender.save()
-    await receiver.save()
-
-    // 2️⃣ Then save transactions
     await debitTxn.save()
     await creditTxn.save()
-
 
     // Emit real-time events
     const transactionData = {
@@ -89,7 +92,7 @@ router.post('/send', auth, async (req, res) => {
       note,
       reference,
       createdAt: debitTxn.createdAt,
-      balance: sender.balance
+      balance: updatedSender.balance
     }
 
     const receiverTransactionData = {
@@ -100,19 +103,18 @@ router.post('/send', auth, async (req, res) => {
       note,
       reference,
       createdAt: creditTxn.createdAt,
-      balance: receiver.balance
+      balance: updatedReceiver.balance
     }
 
-    // Emit real-time events
     const io = getIO()
     if (io) {
       // Notify sender
       io.to(`user:${sender._id}`).emit('transaction:new', transactionData)
-      io.to(`user:${sender._id}`).emit('balance:update', { balance: sender.balance })
+      io.to(`user:${sender._id}`).emit('balance:update', { balance: updatedSender.balance })
 
       // Notify receiver
       io.to(`user:${receiver._id}`).emit('transaction:new', receiverTransactionData)
-      io.to(`user:${receiver._id}`).emit('balance:update', { balance: receiver.balance })
+      io.to(`user:${receiver._id}`).emit('balance:update', { balance: updatedReceiver.balance })
       io.to(`user:${receiver._id}`).emit('payment:received', {
         from: sender.name,
         amount: numAmount,
@@ -131,20 +133,9 @@ router.post('/send', auth, async (req, res) => {
     })
   } catch (error) {
     console.error('Error in /send route:', error)
-    console.error('Error stack:', error.stack)
-    console.error('Error details:', {
-      message: error.message,
-      name: error.name,
-      code: error.code
-    })
     res.status(500).json({ 
       message: 'Server error',
-      error: error.message || 'Unknown error',
-      details: process.env.NODE_ENV === 'development' ? {
-        stack: error.stack,
-        name: error.name,
-        code: error.code
-      } : undefined
+      error: error.message || 'Unknown error'
     })
   }
 })
@@ -152,8 +143,13 @@ router.post('/send', auth, async (req, res) => {
 // Get recent transactions
 router.get('/recent', auth, async (req, res) => {
   try {
+    // BUGFIX: Only fetch DEBIT txns where user is sender, OR CREDIT txns where user is receiver
+    // This prevents double-counting the two distinct Transaction documents created per transfer.
     const transactions = await Transaction.find({
-      $or: [{ sender: req.user._id }, { receiver: req.user._id }]
+      $or: [
+        { sender: req.user._id, type: 'DEBIT' }, 
+        { receiver: req.user._id, type: 'CREDIT' }
+      ]
     })
     .populate('sender', 'name')
     .populate('receiver', 'name')
@@ -163,8 +159,8 @@ router.get('/recent', auth, async (req, res) => {
     const formattedTransactions = transactions.map(txn => ({
       id: txn._id,
       amount: txn.amount,
-      type: txn.sender._id.equals(req.user._id) ? 'DEBIT' : 'CREDIT',
-      counterpartyName: txn.sender._id.equals(req.user._id) ? txn.receiver.name : txn.sender.name,
+      type: txn.type,
+      counterpartyName: txn.counterpartyName,
       note: txn.note,
       createdAt: txn.createdAt
     }))
@@ -172,27 +168,15 @@ router.get('/recent', auth, async (req, res) => {
     res.json({ transactions: formattedTransactions })
   } catch (error) {
     console.error('Error in /recent route:', error)
-    res.status(500).json({ 
-      message: 'Server error',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    })
+    res.status(500).json({ message: 'Server error' })
   }
 })
 
-// QR Payment (simplified - just send money)
+// QR Payment
 router.post('/qr-pay', auth, async (req, res) => {
   try {
     const { qrData, amount, note } = req.body
-    // In a real app, qrData would contain receiver info
-    // For simplicity, assume qrData is the receiver's VPA
     const vpa = qrData
-
-    const receiver = await User.findOne({ vpa })
-    if (!receiver) {
-      return res.status(404).json({ message: 'Invalid QR code' })
-    }
-
-    // Reuse send logic
     const sender = req.user
 
     const numAmount = Number(amount)
@@ -200,102 +184,78 @@ router.post('/qr-pay', auth, async (req, res) => {
       return res.status(400).json({ message: 'Invalid amount' })
     }
 
-    if (sender.balance < amount) {
-      return res.status(400).json({ message: 'Insufficient balance' })
+    const receiver = await User.findOne({ vpa })
+    if (!receiver) {
+      return res.status(404).json({ message: 'Invalid QR code' })
     }
 
     if (receiver._id.equals(sender._id)) {
       return res.status(400).json({ message: 'Cannot send money to yourself' })
     }
 
+    // --- ATOMIC BALANCE TRANSFERS ---
+    const updatedSender = await User.findOneAndUpdate(
+      { _id: sender._id, balance: { $gte: numAmount } },
+      { $inc: { balance: -numAmount } },
+      { new: true }
+    )
+
+    if (!updatedSender) {
+      return res.status(400).json({ message: 'Insufficient balance' })
+    }
+
+    const updatedReceiver = await User.findByIdAndUpdate(
+      receiver._id,
+      { $inc: { balance: numAmount } },
+      { new: true }
+    )
+
     const reference = uuidv4()
 
     const debitTxn = new Transaction({
       sender: sender._id,
       receiver: receiver._id,
-      amount,
+      amount: numAmount,
       type: 'DEBIT',
       counterpartyName: receiver.name,
-      note,
+      note: note || '',
       reference
     })
 
     const creditTxn = new Transaction({
       sender: sender._id,
       receiver: receiver._id,
-      amount,
+      amount: numAmount,
       type: 'CREDIT',
       counterpartyName: sender.name,
-      note,
+      note: note || '',
       reference
     })
 
-    sender.balance -= amount
-    receiver.balance += amount
-
-    // 1️⃣ Save balances first
-    await sender.save()
-    await receiver.save()
-
-    // 2️⃣ Then save transactions
     await debitTxn.save()
     await creditTxn.save()
 
-    // Emit real-time events
-    const transactionData = {
-      id: debitTxn._id,
-      amount: numAmount,
-      type: 'DEBIT',
-      counterpartyName: receiver.name,
-      note,
-      reference,
-      createdAt: debitTxn.createdAt,
-      balance: sender.balance
-    }
-
-    const receiverTransactionData = {
-      id: creditTxn._id,
-      amount: numAmount,
-      type: 'CREDIT',
-      counterpartyName: sender.name,
-      note,
-      reference,
-      createdAt: creditTxn.createdAt,
-      balance: receiver.balance
-    }
-
-    // Emit real-time events
     const io = getIO()
     if (io) {
-      // Notify sender
-      io.to(`user:${sender._id}`).emit('transaction:new', transactionData)
-      io.to(`user:${sender._id}`).emit('balance:update', { balance: sender.balance })
-
-      // Notify receiver
-      io.to(`user:${receiver._id}`).emit('transaction:new', receiverTransactionData)
-      io.to(`user:${receiver._id}`).emit('balance:update', { balance: receiver.balance })
-      io.to(`user:${receiver._id}`).emit('payment:received', {
-        from: sender.name,
-        amount: numAmount,
-        reference
+      io.to(`user:${sender._id}`).emit('transaction:new', {
+        id: debitTxn._id, amount: numAmount, type: 'DEBIT', counterpartyName: receiver.name, note, reference, createdAt: debitTxn.createdAt, balance: updatedSender.balance
       })
+      io.to(`user:${sender._id}`).emit('balance:update', { balance: updatedSender.balance })
+
+      io.to(`user:${receiver._id}`).emit('transaction:new', {
+        id: creditTxn._id, amount: numAmount, type: 'CREDIT', counterpartyName: sender.name, note, reference, createdAt: creditTxn.createdAt, balance: updatedReceiver.balance
+      })
+      io.to(`user:${receiver._id}`).emit('balance:update', { balance: updatedReceiver.balance })
+      io.to(`user:${receiver._id}`).emit('payment:received', { from: sender.name, amount: numAmount, reference })
     }
 
     res.json({
       message: 'Payment successful',
-      transaction: {
-        id: debitTxn._id,
-        amount:numAmount,
-        receiver: receiver.name,
-        reference
-      }
+      transaction: { id: debitTxn._id, amount: numAmount, receiver: receiver.name, reference }
     })
   } catch (error) {
     console.error('Error in /qr-pay route:', error)
-    res.status(500).json({ 
-      message: 'Server error',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    })
+    res.status(500).json({ message: 'Server error' })
   }
 })
 

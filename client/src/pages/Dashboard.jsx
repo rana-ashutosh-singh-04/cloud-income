@@ -144,15 +144,15 @@ export default function Dashboard() {
     { name: "Entertainment", amount: stats.monthlySpent * 0.1, color: "#ec4899" },
   ].filter((c) => c.amount > 0);
 
-  const COLORS = ["#8b5cf6", "#3b82f6", "#10b981", "#f59e0b", "#ec4899"];
+  const COLORS = ["#c2652a", "#a8541f", "#8c3c3c", "#605850", "#8c7e72"];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-indigo-50/30">
+    <div className="min-h-screen bg-[#faf5ee]">
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-6">
         {/* Welcome Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl p-8 text-white shadow-xl">
+        <div className="bg-[#c2652a] rounded-[16px] p-8 text-white shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <p className="text-sm opacity-90 mb-2">Welcome back,</p>
@@ -175,55 +175,55 @@ export default function Dashboard() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition">
+          <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_16px_rgba(58,48,42,0.06)] border border-[rgba(216,208,200,0.7)] hover:shadow-xl transition">
             <div className="flex items-center justify-between mb-2">
-              <div className="p-3 bg-red-100 rounded-xl">
-                <ArrowDownRight className="w-6 h-6 text-red-600" />
+              <div className="p-3 bg-[#c2652a]/10 rounded-full border border-[#c2652a]/20">
+                <ArrowDownRight className="w-6 h-6 text-[#c2652a]" />
               </div>
-              <span className="text-xs text-gray-500">This Month</span>
+              <span className="text-xs text-[#8c7e72]">This Month</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-[#2a1f17]">
               ₹{stats.monthlySpent.toLocaleString("en-IN")}
             </p>
-            <p className="text-xs text-gray-600 mt-1">Total Spent</p>
+            <p className="text-xs text-[#605850] mt-1">Total Spent</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition">
+          <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_16px_rgba(58,48,42,0.06)] border border-[rgba(216,208,200,0.7)] hover:shadow-xl transition">
             <div className="flex items-center justify-between mb-2">
-              <div className="p-3 bg-green-100 rounded-xl">
-                <ArrowUpRight className="w-6 h-6 text-green-600" />
+              <div className="p-3 bg-[#c2652a]/10 rounded-full border border-[#c2652a]/20">
+                <ArrowUpRight className="w-6 h-6 text-[#c2652a]" />
               </div>
-              <span className="text-xs text-gray-500">Total</span>
+              <span className="text-xs text-[#8c7e72]">Total</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-[#2a1f17]">
               ₹{stats.totalReceived.toLocaleString("en-IN")}
             </p>
-            <p className="text-xs text-gray-600 mt-1">Total Received</p>
+            <p className="text-xs text-[#605850] mt-1">Total Received</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition">
+          <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_16px_rgba(58,48,42,0.06)] border border-[rgba(216,208,200,0.7)] hover:shadow-xl transition">
             <div className="flex items-center justify-between mb-2">
-              <div className="p-3 bg-blue-100 rounded-xl">
-                <BarChart3 className="w-6 h-6 text-blue-600" />
+              <div className="p-3 bg-[#c2652a]/10 rounded-full border border-[#c2652a]/20">
+                <BarChart3 className="w-6 h-6 text-[#c2652a]" />
               </div>
-              <span className="text-xs text-gray-500">All Time</span>
+              <span className="text-xs text-[#8c7e72]">All Time</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stats.transactionCount}</p>
-            <p className="text-xs text-gray-600 mt-1">Transactions</p>
+            <p className="text-2xl font-bold text-[#2a1f17]">{stats.transactionCount}</p>
+            <p className="text-xs text-[#605850] mt-1">Transactions</p>
           </div>
 
           {portfolioValue > 0 && (
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition">
+            <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_16px_rgba(58,48,42,0.06)] border border-[rgba(216,208,200,0.7)] hover:shadow-xl transition">
               <div className="flex items-center justify-between mb-2">
-                <div className="p-3 bg-purple-100 rounded-xl">
-                  <TrendingUp className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-[#c2652a]/10 rounded-full border border-[#c2652a]/20">
+                  <TrendingUp className="w-6 h-6 text-[#c2652a]" />
                 </div>
-                <span className="text-xs text-gray-500">Portfolio</span>
+                <span className="text-xs text-[#8c7e72]">Portfolio</span>
               </div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-[#2a1f17]">
                 ₹{portfolioValue.toLocaleString("en-IN")}
               </p>
-              <p className={`text-xs mt-1 ${portfolioProfitLoss >= 0 ? "text-green-600" : "text-red-600"}`}>
+              <p className={`text-xs mt-1 ${portfolioProfitLoss >= 0 ? "text-green-600" : "text-[#8c3c3c]"}`}>
                 {portfolioProfitLoss >= 0 ? "+" : ""}
                 ₹{Math.abs(portfolioProfitLoss).toLocaleString("en-IN")}
               </p>
@@ -232,15 +232,15 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions */}
-        <Card className="shadow-lg rounded-2xl p-6 border border-gray-100">
-          <h3 className="font-bold text-xl mb-6 text-gray-900 flex items-center gap-2">
-            <Zap className="w-5 h-5 text-purple-600" />
+        <Card className="bg-white rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
+          <h3 className="font-bold text-xl mb-6 text-[#2a1f17] flex items-center gap-2">
+            <Zap className="w-5 h-5 text-[#c2652a]" />
             Quick Actions
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <button
               onClick={() => navigate("/send")}
-              className="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg"
+              className="flex flex-col items-center justify-center p-6 bg-[#c2652a] text-white rounded-[8px] hover:bg-[#a8541f] transition-all transform hover:scale-105"
             >
               <Send className="w-8 h-8 mb-2" />
               <span className="font-semibold">Send Money</span>
@@ -248,7 +248,7 @@ export default function Dashboard() {
 
             <button
               onClick={() => setQrOpen(true)}
-              className="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-2xl hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 shadow-lg"
+              className="flex flex-col items-center justify-center p-6 bg-[#c2652a] text-white rounded-[8px] hover:bg-[#a8541f] transition-all transform hover:scale-105"
             >
               <QrCode className="w-8 h-8 mb-2" />
               <span className="font-semibold">Receive</span>
@@ -256,7 +256,7 @@ export default function Dashboard() {
 
             <button
               onClick={() => navigate("/bills")}
-              className="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-2xl hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+              className="flex flex-col items-center justify-center p-6 bg-[#c2652a] text-white rounded-[8px] hover:bg-[#a8541f] transition-all transform hover:scale-105"
             >
               <Receipt className="w-8 h-8 mb-2" />
               <span className="font-semibold">Pay Bills</span>
@@ -264,7 +264,7 @@ export default function Dashboard() {
 
             <button
               onClick={() => navigate("/stocks")}
-              className="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-2xl hover:from-indigo-600 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg"
+              className="flex flex-col items-center justify-center p-6 bg-[#c2652a] text-white rounded-[8px] hover:bg-[#a8541f] transition-all transform hover:scale-105"
             >
               <TrendingUp className="w-8 h-8 mb-2" />
               <span className="font-semibold">Stocks</span>
@@ -275,30 +275,31 @@ export default function Dashboard() {
         {/* Charts and Analytics */}
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Monthly Spending Chart */}
-          <Card className="shadow-lg rounded-2xl p-6 border border-gray-100">
+          <Card className="bg-white rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-bold text-xl text-gray-900 flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-purple-600" />
+              <h3 className="font-bold text-xl text-[#2a1f17] flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-[#c2652a]" />
                 Monthly Spending
               </h3>
             </div>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(216,208,200,0.7)" />
+                <XAxis dataKey="month" tick={{ fontSize: 12, fill: "#8c7e72" }} />
                 <YAxis
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: "#8c7e72" }}
                   tickFormatter={(value) => `₹${value / 1000}k`}
                 />
                 <Tooltip
                   formatter={(value) => [`₹${value.toLocaleString("en-IN")}`, "Spent"]}
+                  contentStyle={{ backgroundColor: "#ffffff", borderColor: "rgba(216,208,200,0.7)", borderRadius: "8px" }}
                 />
                 <Line
                   type="monotone"
                   dataKey="spent"
-                  stroke="#8b5cf6"
+                  stroke="#c2652a"
                   strokeWidth={3}
-                  dot={{ fill: "#8b5cf6", r: 4 }}
+                  dot={{ fill: "#c2652a", r: 4 }}
                   activeDot={{ r: 6 }}
                 />
               </LineChart>
@@ -307,14 +308,17 @@ export default function Dashboard() {
 
           {/* Spending Categories */}
           {categories.length > 0 && (
-            <Card className="shadow-lg rounded-2xl p-6 border border-gray-100">
-              <h3 className="font-bold text-xl mb-6 text-gray-900 flex items-center gap-2">
-                <PieChart className="w-5 h-5 text-purple-600" />
+            <Card className="bg-white rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
+              <h3 className="font-bold text-xl mb-6 text-[#2a1f17] flex items-center gap-2">
+                <PieChart className="w-5 h-5 text-[#c2652a]" />
                 Spending Categories
               </h3>
               <ResponsiveContainer width="100%" height={250}>
                 <RechartsPieChart>
-                  <Tooltip formatter={(value) => `₹${value.toLocaleString("en-IN")}`} />
+                  <Tooltip 
+                    formatter={(value) => `₹${value.toLocaleString("en-IN")}`} 
+                    contentStyle={{ backgroundColor: "#ffffff", borderColor: "rgba(216,208,200,0.7)", borderRadius: "8px" }}
+                  />
                   <Pie
                     data={categories}
                     cx="50%"
@@ -342,15 +346,15 @@ export default function Dashboard() {
 
         {/* Portfolio Summary (if stocks exist) */}
         {stockHoldings.length > 0 && (
-          <Card className="shadow-lg rounded-2xl p-6 border border-gray-100">
+          <Card className="bg-white rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-xl text-gray-900 flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-purple-600" />
+              <h3 className="font-bold text-xl text-[#2a1f17] flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-[#c2652a]" />
                 Stock Portfolio
               </h3>
               <button
                 onClick={() => navigate("/stocks")}
-                className="text-purple-600 hover:text-purple-700 font-semibold text-sm"
+                className="text-[#c2652a] hover:text-[#a8541f] font-semibold text-sm transition"
               >
                 View All →
               </button>
@@ -359,25 +363,25 @@ export default function Dashboard() {
               {stockHoldings.slice(0, 3).map((holding) => (
                 <div
                   key={holding.symbol}
-                  className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200"
+                  className="bg-[#f3ece0] rounded-[16px] p-4 border border-[rgba(216,208,200,0.7)]"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-bold text-gray-900">{holding.symbol}</h4>
+                    <h4 className="font-bold text-[#2a1f17]">{holding.symbol}</h4>
                     <span
                       className={`text-sm font-semibold ${
                         holding.profitLossPercent >= 0
                           ? "text-green-600"
-                          : "text-red-600"
+                          : "text-[#8c3c3c]"
                       }`}
                     >
                       {holding.profitLossPercent >= 0 ? "+" : ""}
                       {holding.profitLossPercent.toFixed(2)}%
                     </span>
                   </div>
-                  <p className="text-xs text-gray-600 mb-2">{holding.companyName}</p>
+                  <p className="text-xs text-[#8c7e72] mb-2">{holding.companyName}</p>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Qty: {holding.quantity}</span>
-                    <span className="font-semibold text-gray-900">
+                    <span className="text-[#605850]">Qty: {holding.quantity}</span>
+                    <span className="font-semibold text-[#2a1f17]">
                       ₹{holding.totalValue.toLocaleString("en-IN")}
                     </span>
                   </div>
@@ -388,52 +392,52 @@ export default function Dashboard() {
         )}
 
         {/* Transactions Section */}
-        <Card className="shadow-lg rounded-2xl p-6 border border-gray-100">
+        <Card className="bg-white rounded-[16px] p-6 border border-[rgba(216,208,200,0.7)] shadow-[0_2px_16px_rgba(58,48,42,0.06)]">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-            <h3 className="font-bold text-xl text-gray-900 flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-purple-600" />
+            <h3 className="font-bold text-xl text-[#2a1f17] flex items-center gap-2">
+              <CreditCard className="w-5 h-5 text-[#c2652a]" />
               Recent Transactions
             </h3>
             <div className="flex items-center gap-3 flex-wrap">
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#8c7e72]" />
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="pl-10 pr-4 py-2 bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] text-[#4a3d33] placeholder-[#8c7e72] text-sm focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none transition"
                 />
               </div>
               {/* Filter */}
-              <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+              <div className="flex items-center gap-2 bg-[#f3ece0] rounded-[8px] p-1 border border-[rgba(216,208,200,0.7)]">
                 <button
                   onClick={() => setFilter("all")}
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
+                  className={`px-4 py-1.5 rounded-[6px] text-sm font-medium transition ${
                     filter === "all"
-                      ? "bg-white text-purple-700 shadow-sm"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-white text-[#c2652a] shadow-[0_2px_16px_rgba(58,48,42,0.06)] border border-[rgba(216,208,200,0.7)]"
+                      : "text-[#605850] hover:text-[#2a1f17]"
                   }`}
                 >
                   All
                 </button>
                 <button
                   onClick={() => setFilter("debit")}
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
+                  className={`px-4 py-1.5 rounded-[6px] text-sm font-medium transition ${
                     filter === "debit"
-                      ? "bg-white text-red-600 shadow-sm"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-white text-[#c2652a] shadow-[0_2px_16px_rgba(58,48,42,0.06)] border border-[rgba(216,208,200,0.7)]"
+                      : "text-[#605850] hover:text-[#2a1f17]"
                   }`}
                 >
                   Sent
                 </button>
                 <button
                   onClick={() => setFilter("credit")}
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
+                  className={`px-4 py-1.5 rounded-[6px] text-sm font-medium transition ${
                     filter === "credit"
-                      ? "bg-white text-green-600 shadow-sm"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-white text-[#c2652a] shadow-[0_2px_16px_rgba(58,48,42,0.06)] border border-[rgba(216,208,200,0.7)]"
+                      : "text-[#605850] hover:text-[#2a1f17]"
                   }`}
                 >
                   Received
@@ -442,13 +446,13 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="space-y-2 max-h-[400px] overflow-y-auto">
+          <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
             {filteredTxns.length > 0 ? (
               filteredTxns.map((txn) => (
                 <TransactionItem key={txn.id || txn._id} txn={txn} />
               ))
             ) : (
-              <div className="text-center text-gray-500 py-12">
+              <div className="text-center text-[#8c7e72] py-12">
                 <p className="text-sm">No transactions found</p>
               </div>
             )}

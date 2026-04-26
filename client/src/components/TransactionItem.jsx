@@ -7,26 +7,26 @@ export default function TransactionItem({ txn }) {
   const timeAgo = getTimeAgo(date);
 
   return (
-    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-xl hover:shadow-md transition border border-gray-100 group">
+    <div className="flex items-center justify-between p-4 bg-[#ffffff] rounded-[12px] shadow-[0_2px_16px_rgba(58,48,42,0.06)] hover:shadow-lg transition border border-[rgba(216,208,200,0.7)] group">
       <div className="flex items-center gap-4 flex-1">
         <div
-          className={`p-3 rounded-xl ${
+          className={`p-3 rounded-[12px] ${
             isDebit
-              ? "bg-red-100 group-hover:bg-red-200"
-              : "bg-green-100 group-hover:bg-green-200"
+              ? "bg-[#8c3c3c]/10 group-hover:bg-[#8c3c3c]/20"
+              : "bg-[#c2652a]/10 group-hover:bg-[#c2652a]/20"
           } transition`}
         >
           {isDebit ? (
-            <ArrowDownRight className="w-5 h-5 text-red-600" />
+            <ArrowDownRight className="w-5 h-5 text-[#8c3c3c]" />
           ) : (
-            <ArrowUpRight className="w-5 h-5 text-green-600" />
+            <ArrowUpRight className="w-5 h-5 text-[#c2652a]" />
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-semibold text-gray-900 mb-1 truncate">
+          <div className="font-semibold text-[#2a1f17] mb-1 truncate">
             {txn.counterpartyName}
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs text-[#8c7e72]">
             <Clock className="w-3 h-3" />
             <span>{timeAgo}</span>
             {txn.note && (
@@ -40,7 +40,7 @@ export default function TransactionItem({ txn }) {
       </div>
       <div
         className={`font-bold text-lg ${
-          isDebit ? "text-red-600" : "text-green-600"
+          isDebit ? "text-[#8c3c3c]" : "text-[#c2652a]"
         }`}
       >
         {sign}₹{Number(txn.amount).toLocaleString("en-IN", {

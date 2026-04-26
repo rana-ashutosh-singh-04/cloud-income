@@ -5,12 +5,12 @@ import { useAuth } from "../hooks/useAuth";
 import { CreditCard, Wallet, CheckCircle, Building2 } from "lucide-react";
 
 const banks = [
-  { name: "HDFC Bank", color: "from-blue-500 to-blue-600" },
-  { name: "ICICI Bank", color: "from-orange-500 to-orange-600" },
-  { name: "SBI", color: "from-blue-600 to-indigo-600" },
-  { name: "Axis Bank", color: "from-red-500 to-red-600" },
-  { name: "Kotak Mahindra", color: "from-purple-500 to-purple-600" },
-  { name: "Citibank", color: "from-cyan-500 to-cyan-600" },
+  { name: "HDFC Bank" },
+  { name: "ICICI Bank" },
+  { name: "SBI" },
+  { name: "Axis Bank" },
+  { name: "Kotak Mahindra" },
+  { name: "Citibank" },
 ];
 
 export default function CreditCardPage() {
@@ -41,34 +41,34 @@ export default function CreditCardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-indigo-50/30">
+    <div className="min-h-screen bg-[#faf5ee]">
       <Navbar />
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#2a1f17] mb-3">
             Credit Card Payment
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-[#605850]">
             Pay your credit card bills instantly
           </p>
         </div>
 
-        <Card className="shadow-xl rounded-2xl p-8 border border-gray-100">
+        <Card className="bg-[#ffffff] shadow-[0_2px_16px_rgba(58,48,42,0.06)] rounded-[16px] p-8 border border-[rgba(216,208,200,0.7)]">
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-4 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl text-white">
+            <div className="p-4 bg-[#c2652a]/10 border border-[#c2652a]/20 rounded-[12px] text-[#c2652a]">
               <CreditCard className="w-8 h-8" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Pay Credit Card Bill</h2>
-              <p className="text-gray-600">Select bank and enter card details</p>
+              <h2 className="text-2xl font-bold text-[#2a1f17]">Pay Credit Card Bill</h2>
+              <p className="text-[#605850]">Select bank and enter card details</p>
             </div>
           </div>
 
           <div className="space-y-6">
             {/* Bank Selection */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-[#605850] mb-3">
                 Select Bank
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -76,10 +76,10 @@ export default function CreditCardPage() {
                   <button
                     key={bank.name}
                     onClick={() => setSelectedBank(bank.name)}
-                    className={`p-4 rounded-xl border-2 transition ${
+                    className={`p-4 rounded-[8px] border transition ${
                       selectedBank === bank.name
-                        ? "border-purple-500 bg-purple-50 text-purple-700 font-semibold"
-                        : "border-gray-200 hover:border-purple-300 bg-white text-gray-700"
+                        ? "border-[#c2652a] bg-[#c2652a]/5 text-[#c2652a] font-semibold shadow-[0_2px_8px_rgba(194,101,42,0.15)]"
+                        : "border-[rgba(216,208,200,0.7)] hover:border-[#c2652a]/50 bg-white text-[#4a3d33]"
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -93,7 +93,7 @@ export default function CreditCardPage() {
 
             {/* Card Number */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#605850] mb-2">
                 Card Number (Last 4 digits)
               </label>
               <input
@@ -105,13 +105,13 @@ export default function CreditCardPage() {
                 }}
                 placeholder="XXXX"
                 maxLength={4}
-                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg font-mono"
+                className="w-full px-4 py-4 bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] text-lg font-mono transition"
               />
             </div>
 
             {/* Amount */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#605850] mb-2">
                 Amount (₹)
               </label>
               <input
@@ -120,20 +120,20 @@ export default function CreditCardPage() {
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="Enter amount"
                 min="1"
-                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg font-semibold"
+                className="w-full px-4 py-4 bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] text-lg font-semibold transition"
               />
             </div>
 
             {/* Balance Display */}
-            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 border border-purple-200">
+            <div className="bg-[#f3ece0] rounded-[12px] p-4 border border-[rgba(216,208,200,0.7)]">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Wallet className="w-5 h-5 text-purple-600" />
-                  <span className="text-sm font-medium text-gray-700">
+                  <Wallet className="w-5 h-5 text-[#c2652a]" />
+                  <span className="text-sm font-medium text-[#605850]">
                     Available Balance
                   </span>
                 </div>
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-[#2a1f17]">
                   ₹{Number(user?.balance || 0).toLocaleString("en-IN", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -145,12 +145,12 @@ export default function CreditCardPage() {
             {/* Status Message */}
             {status && (
               <div
-                className={`p-4 rounded-xl border-2 ${
+                className={`p-4 rounded-xl border ${
                   status.type === "success"
                     ? "bg-green-50 border-green-200 text-green-800"
                     : status.type === "loading"
-                    ? "bg-blue-50 border-blue-200 text-blue-800"
-                    : "bg-red-50 border-red-200 text-red-800"
+                    ? "bg-[#f3ece0] border-[rgba(216,208,200,0.7)] text-[#4a3d33]"
+                    : "bg-[#8c3c3c]/10 border-[#8c3c3c]/20 text-[#8c3c3c]"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -164,7 +164,7 @@ export default function CreditCardPage() {
             <button
               onClick={handlePayment}
               disabled={!selectedBank || !cardNumber || !amount || status.type === "loading"}
-              className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-bold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-4 bg-[#c2652a] text-white rounded-[8px] font-bold text-lg hover:bg-[#a8541f] transition-all transform hover:scale-[1.02] shadow-[0_2px_16px_rgba(58,48,42,0.06)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {status.type === "loading" ? (
                 <>
@@ -184,5 +184,3 @@ export default function CreditCardPage() {
     </div>
   );
 }
-
-
