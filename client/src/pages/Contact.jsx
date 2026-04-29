@@ -11,7 +11,10 @@ import {
   Send,
   Headphones,
   FileText,
-  HelpCircle
+  HelpCircle,
+  Twitter,
+  Linkedin,
+  Instagram
 } from "lucide-react";
 
 export default function Contact() {
@@ -108,16 +111,55 @@ const handleSubmit = (e) => {
     <div className="min-h-screen bg-[#faf5ee]">
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="bg-[#c2652a] text-white py-20 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-[#ffffff]">
-            Get in Touch
-          </h1>
-          <p className="text-xl opacity-90 max-w-3xl mx-auto">
-            We're here to help! Reach out to us through any of the channels below, 
-            and we'll get back to you as soon as possible.
-          </p>
+      {/* Hero Section (Figma Inspired) */}
+      <section className="bg-[#faf5ee] relative flex items-center justify-center pt-32 pb-16 px-6 overflow-hidden">
+        {/* Ghost Text Background */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-bold text-[#c2652a] opacity-[0.04] whitespace-nowrap select-none pointer-events-none tracking-tighter">
+          LET'S TALK!
+        </div>
+
+        <div className="max-w-7xl w-full mx-auto bg-[#ffffff] rounded-[32px] overflow-hidden shadow-xl relative z-10 flex flex-col lg:flex-row border border-[rgba(216,208,200,0.7)]">
+          {/* Left Side - Visual & Branding */}
+          <div className="w-full lg:w-1/2 p-12 lg:p-16 flex flex-col justify-between bg-[rgba(250,245,238,0.5)] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#c2652a]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#c2652a]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+            
+            <div className="relative z-10">
+              <h1 className="text-6xl md:text-8xl font-bold text-[#2a1f17] font-serif leading-[0.9] tracking-tight mb-8">
+                Let's<br/>
+                <span className="text-[#c2652a] relative inline-block">
+                  talk!
+                  <span className="absolute inset-0 text-[#c2652a] opacity-30 translate-x-1 translate-y-1 blur-sm pointer-events-none">talk!</span>
+                  <span className="absolute inset-0 text-[#c2652a] opacity-30 -translate-x-1 -translate-y-1 blur-sm pointer-events-none">talk!</span>
+                </span>
+              </h1>
+              <p className="text-[#605850] text-lg font-medium max-w-sm leading-snug">
+                We're here to help! Reach out to us through any of the channels below, and we'll get back to you as soon as possible.
+              </p>
+            </div>
+          </div>
+
+          {/* Right Side - Community info */}
+          <div className="w-full lg:w-1/2 p-12 lg:p-16 bg-white flex flex-col justify-center items-start lg:items-end text-left lg:text-right border-t lg:border-t-0 lg:border-l border-[rgba(216,208,200,0.7)]">
+            <div className="mb-8 w-full">
+              <span className="text-sm font-bold tracking-widest text-[#c2652a] uppercase mb-4 block">Join Our Community</span>
+              <p className="text-[#605850] text-base leading-relaxed max-w-sm lg:ml-auto">
+                Connect with us on social media for the latest updates, feature announcements, and to join a community of like-minded individuals building the future of finance.
+              </p>
+            </div>
+            
+            <div className="flex gap-4 lg:justify-end w-full">
+               <a href="#" className="w-12 h-12 rounded-full border border-[rgba(216,208,200,0.7)] flex items-center justify-center hover:bg-[#c2652a] hover:border-[#c2652a] hover:text-white transition-all text-[#2a1f17] shadow-sm">
+                 <Twitter className="w-5 h-5" />
+               </a>
+               <a href="#" className="w-12 h-12 rounded-full border border-[rgba(216,208,200,0.7)] flex items-center justify-center hover:bg-[#c2652a] hover:border-[#c2652a] hover:text-white transition-all text-[#2a1f17] shadow-sm">
+                 <Linkedin className="w-5 h-5" />
+               </a>
+               <a href="#" className="w-12 h-12 rounded-full border border-[rgba(216,208,200,0.7)] flex items-center justify-center hover:bg-[#c2652a] hover:border-[#c2652a] hover:text-white transition-all text-[#2a1f17] shadow-sm">
+                 <Instagram className="w-5 h-5" />
+               </a>
+            </div>
+          </div>
         </div>
       </section>
 

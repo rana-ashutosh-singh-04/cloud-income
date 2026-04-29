@@ -59,12 +59,12 @@ export default function Navbar() {
           {user ? (
             <button
               onClick={handleLogout}
-              className="hidden md:block border border-[#8c3c3c]/40 text-[#8c3c3c] hover:bg-[#8c3c3c]/5 px-4 py-1.5 rounded-full transition nav-link text-sm font-semibold bg-white/50 backdrop-blur-sm"
+              className="hidden lg:block border border-[#8c3c3c]/40 text-[#8c3c3c] hover:bg-[#8c3c3c]/5 px-4 py-1.5 rounded-full transition nav-link text-sm font-semibold bg-white/50 backdrop-blur-sm"
             >
               Logout
             </button>
           ) : (
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-3">
               <Link to="/login" className="text-[#4a3d33] hover:text-[#c2652a] text-sm font-semibold transition nav-link bg-white/50 backdrop-blur-sm px-4 py-1.5 rounded-full border border-[rgba(216,208,200,0.7)]">Log in</Link>
               <Link to="/signup" className="bg-[#c2652a] text-white hover:bg-[#a55220] px-4 py-1.5 rounded-full text-sm font-semibold transition shadow-sm">Sign up</Link>
             </div>
@@ -72,7 +72,7 @@ export default function Navbar() {
 
           {/* Mobile Button */}
           <button
-            className="md:hidden text-[#c2652a] p-2 bg-[rgba(250,245,238,0.85)] backdrop-blur-[16px] border border-[rgba(216,208,200,0.7)] rounded-full shadow-[0_2px_24px_rgba(0,0,0,0.08)]"
+            className="lg:hidden text-[#c2652a] p-2 bg-[rgba(250,245,238,0.85)] backdrop-blur-[16px] border border-[rgba(216,208,200,0.7)] rounded-full shadow-[0_2px_24px_rgba(0,0,0,0.08)]"
             onClick={() => setOpen(!open)}
           >
             {open ? (
@@ -85,7 +85,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {open && (
-          <div className="absolute top-[calc(100%+16px)] left-6 right-6 md:hidden bg-[rgba(250,245,238,0.95)] backdrop-blur-[16px] shadow-[0_2px_24px_rgba(0,0,0,0.08)] px-6 py-6 border border-[rgba(216,208,200,0.7)] rounded-[24px] pointer-events-auto">
+          <div className="absolute top-[calc(100%+16px)] left-6 right-6 lg:hidden bg-[rgba(250,245,238,0.95)] backdrop-blur-[16px] shadow-[0_2px_24px_rgba(0,0,0,0.08)] px-6 py-6 border border-[rgba(216,208,200,0.7)] rounded-[24px] pointer-events-auto">
             <ul className="flex flex-col gap-4 text-[#4a3d33] font-medium">
               {navLinks.map((link) => (
                 <Link
@@ -117,7 +117,7 @@ export default function Navbar() {
       </header>
 
       {/* Center Pill Box (Navigation Links) - Fixed so it moves with the user on scroll */}
-      <nav className="nav-header hidden md:flex items-center bg-[rgba(250,245,238,0.85)] backdrop-blur-[16px] border border-[rgba(216,208,200,0.7)] rounded-full px-[32px] py-[14px] shadow-[0_2px_24px_rgba(0,0,0,0.08)] pointer-events-auto fixed top-[20px] left-1/2 -translate-x-1/2 z-[100]">
+      <nav className="nav-header hidden lg:flex items-center bg-[rgba(250,245,238,0.85)] backdrop-blur-[16px] border border-[rgba(216,208,200,0.7)] rounded-full px-[32px] py-[14px] shadow-[0_2px_24px_rgba(0,0,0,0.08)] pointer-events-auto fixed top-[20px] left-1/2 -translate-x-1/2 z-[100]">
         <div className="flex items-center gap-8 text-sm font-semibold text-[#4a3d33]">
           {navLinks.map((link) => (
             <Link

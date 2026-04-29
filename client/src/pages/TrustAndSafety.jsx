@@ -91,17 +91,56 @@ export default function TrustAndSafety() {
     <div className="min-h-screen bg-[#faf5ee]">
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="bg-[#c2652a] text-white py-20 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <Shield className="w-16 h-16 mx-auto mb-6 text-[#ffffff]" />
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-[#ffffff]">
-            Trust & Safety
-          </h1>
-          <p className="text-xl opacity-90 max-w-3xl mx-auto">
-            Your security is our top priority. We use bank-grade encryption and 
-            industry-leading security practices to keep your money and data safe.
-          </p>
+      {/* Hero Section (Upgraded) */}
+      <section className="bg-[#faf5ee] relative flex items-center justify-center pt-32 pb-16 px-6 overflow-hidden">
+        {/* Ghost Text Background */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-bold text-[#c2652a] opacity-[0.04] whitespace-nowrap select-none pointer-events-none tracking-tighter">
+          SECURE
+        </div>
+
+        <div className="max-w-7xl w-full mx-auto bg-[#ffffff] rounded-[32px] overflow-hidden shadow-xl relative z-10 flex flex-col lg:flex-row border border-[rgba(216,208,200,0.7)]">
+          {/* Left Side - Visual & Branding */}
+          <div className="w-full lg:w-1/2 p-12 lg:p-16 flex flex-col justify-between bg-[rgba(250,245,238,0.5)] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#c2652a]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#c2652a]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+            
+            <div className="relative z-10">
+              <Shield className="w-16 h-16 mb-8 text-[#c2652a]" />
+              <h1 className="text-6xl md:text-8xl font-bold text-[#2a1f17] font-serif leading-[0.9] tracking-tight mb-8">
+                Trust &<br/>
+                <span className="text-[#c2652a] relative inline-block">
+                  Safety
+                  <span className="absolute inset-0 text-[#c2652a] opacity-30 translate-x-1 translate-y-1 blur-sm pointer-events-none">Safety</span>
+                  <span className="absolute inset-0 text-[#c2652a] opacity-30 -translate-x-1 -translate-y-1 blur-sm pointer-events-none">Safety</span>
+                </span>
+              </h1>
+              <p className="text-[#605850] text-lg font-medium max-w-sm leading-snug">
+                Your security is our top priority. We use bank-grade encryption and industry-leading security practices to keep your money and data safe.
+              </p>
+            </div>
+          </div>
+
+          {/* Right Side - Features or Info */}
+          <div className="w-full lg:w-1/2 p-12 lg:p-16 bg-white flex flex-col justify-center items-start lg:items-end text-left lg:text-right border-t lg:border-t-0 lg:border-l border-[rgba(216,208,200,0.7)]">
+            <div className="mb-8 w-full">
+              <span className="text-sm font-bold tracking-widest text-[#c2652a] uppercase mb-4 block">Bank-Grade Protection</span>
+              <p className="text-[#605850] text-base leading-relaxed max-w-sm lg:ml-auto">
+                We monitor transactions 24/7, employing advanced AI to prevent fraud before it happens. Your peace of mind is built into our core architecture.
+              </p>
+            </div>
+            
+            <div className="flex gap-4 lg:justify-end w-full">
+               <div className="w-14 h-14 rounded-full border border-[rgba(216,208,200,0.7)] flex items-center justify-center text-[#2a1f17] shadow-sm bg-[#faf5ee]">
+                 <Lock className="w-6 h-6 text-[#c2652a]" />
+               </div>
+               <div className="w-14 h-14 rounded-full border border-[rgba(216,208,200,0.7)] flex items-center justify-center text-[#2a1f17] shadow-sm bg-[#faf5ee]">
+                 <ShieldCheck className="w-6 h-6 text-[#c2652a]" />
+               </div>
+               <div className="w-14 h-14 rounded-full border border-[rgba(216,208,200,0.7)] flex items-center justify-center text-[#2a1f17] shadow-sm bg-[#faf5ee]">
+                 <Server className="w-6 h-6 text-[#c2652a]" />
+               </div>
+            </div>
+          </div>
         </div>
       </section>
 

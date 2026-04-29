@@ -261,8 +261,8 @@ export default function StockMarket() {
                         <AreaChart data={priceHistory}>
                           <defs>
                             <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#9333ea" stopOpacity={0.3}/>
-                              <stop offset="95%" stopColor="#9333ea" stopOpacity={0}/>
+                              <stop offset="5%" stopColor={selectedStock.changePercent >= 0 ? "#16a34a" : "#dc2626"} stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor={selectedStock.changePercent >= 0 ? "#16a34a" : "#dc2626"} stopOpacity={0}/>
                             </linearGradient>
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -288,7 +288,7 @@ export default function StockMarket() {
                           <Area 
                             type="monotone" 
                             dataKey="price" 
-                            stroke="#9333ea" 
+                            stroke={selectedStock.changePercent >= 0 ? "#16a34a" : "#dc2626"} 
                             strokeWidth={2}
                             fillOpacity={1}
                             fill="url(#colorPrice)"
