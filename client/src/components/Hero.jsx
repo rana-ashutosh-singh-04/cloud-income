@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { useGLTF, Float, Environment, ContactShadows } from "@react-three/drei";
 import { motion } from "framer-motion";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useMemo } from "react";
 
 const NAVBAR_HEIGHT = 64; // px
 
@@ -11,14 +11,16 @@ useGLTF.preload("/models/credit_card.glb");
 
 const BitcoinModel = ({ isMobile }) => {
   const { scene } = useGLTF("/models/bitcoin_3d_model.glb");
+  const clonedScene = useMemo(() => scene.clone(), [scene]);
   const scale = isMobile ? 0.5 : 0.75;
-  return <primitive object={scene} scale={scale} />;
+  return <primitive object={clonedScene} scale={scale} dispose={null} />;
 };
 
 const CreditCardModel = ({ isMobile }) => {
   const { scene } = useGLTF("/models/credit_card.glb");
+  const clonedScene = useMemo(() => scene.clone(), [scene]);
   const scale = isMobile ? 0.7 : 1.1;
-  return <primitive object={scene} scale={scale} rotation={[0.5, -0.5, 0]} />;
+  return <primitive object={clonedScene} scale={scale} rotation={[0.5, -0.5, 0]} dispose={null} />;
 };
 
 const Hero = () => {
@@ -66,7 +68,7 @@ const Hero = () => {
               <CreditCardModel isMobile={isMobile} />
             </Float>
 
-            {!isMobile && <ContactShadows position={[0, -5, 0]} opacity={0.3} scale={20} blur={2} far={6} />}
+            {!isMobile && <ContactShadows position={[0, -5, 0]} opacity={0.3} scale={20} blur={2} far={6} resolution={256} frames={1} />}
           </Suspense>
         </Canvas>
       </div>

@@ -1,5 +1,5 @@
 import { Shield, Linkedin, Twitter, Facebook, Youtube } from "lucide-react";
-
+import footerAnimation from "../assets/footerAnimation.svg"
 const Footer = () => {
   return (
     
@@ -263,7 +263,11 @@ const Footer = () => {
 
         </div>
       </div>
-
+      <img
+  src={footerAnimation}
+  alt="footer"
+  className="w-full h-auto"
+/>
     </footer>
   );
 };
