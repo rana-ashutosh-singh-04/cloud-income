@@ -23,6 +23,7 @@ client/
 │   │   ├── Navbar.jsx      # Global top navigation
 │   │   ├── Footer.jsx      # Global footer
 │   │   ├── Hero.jsx        # Landing page 3D hero section
+│   │   ├── LandingContent.jsx # Landing page features & dashboard mockup
 │   │   ├── FadeIn.jsx      # Reusable Framer Motion wrapper
 │   │   └── ...
 │   ├── pages/              # Main route components
@@ -83,3 +84,4 @@ The application strictly adheres to a cohesive, warm minimalist design language.
 ## 🧹 Maintenance Notes
 
 - **Cleanup (April 2026)**: The `client` folder has been thoroughly audited and cleaned. Old, unused visual dependencies (like `HeroBackgroundSlider`, `particlesBackground`, `OptimizedImage`, and legacy `card` components) have been safely removed to reduce bundle size and keep the source tree uncluttered.
+- **WebGL Optimization (May 2026)**: Fixed severe context loss issues in the 3D Hero section by aggressively optimizing `ContactShadows` (baking shadows once on mount) and cloning `useGLTF` scenes to prevent caching corruption during React unmounts.

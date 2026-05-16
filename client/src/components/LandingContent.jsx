@@ -62,9 +62,9 @@ export default function LandingContent() {
               {/* Placeholder for the landscape image */}
               <div className="absolute inset-0 bg-[#e0d6cb]"></div>
               <img
-                src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop"
-                alt="Mountain landscape"
-                className="w-full h-full object-cover"
+                src="/sortter.jpg"
+                alt="Sortter landscape"
+                className="w-full h-full object-cover relative z-10"
               />
             </div>
           </section>
@@ -110,8 +110,8 @@ export default function LandingContent() {
             <div className="rounded-3xl overflow-hidden bg-[#e8e2d7] aspect-[4/5] relative shadow-md">
               {/* Placeholder for 3D graphic */}
               <img
-                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop"
-                alt="Abstract 3D shapes"
+                src="/cardmap.jpg"
+                alt="cardmap jpg"
                 className="w-full h-full object-cover opacity-90"
               />
             </div>
