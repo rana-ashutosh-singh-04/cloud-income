@@ -1,6 +1,6 @@
-import React, { lazy, Suspense, useMemo, useCallback, memo } from "react";
+import React, { lazy, Suspense, useMemo, memo } from "react";
 import { Link } from "react-router-dom";
-import { Send, Receipt, Smartphone, CreditCard, Zap, Shield, TrendingUp, Users, Lock, Clock, Globe, BarChart3 } from "lucide-react";
+import { Send, Receipt, Smartphone, CreditCard, Zap, Shield, TrendingUp, Users, Lock, Clock, Globe, BarChart3, Briefcase } from "lucide-react";
 import Navbar from "../components/Navbar";
 import LazySection from "../components/LazySection";
 
@@ -22,7 +22,7 @@ const SectionLoader = () => (
 );
 
 // Memoized Service Card Component for better performance
-const ServiceCard = memo(({ service, index }) => {
+const ServiceCard = memo(({ service }) => {
   const Icon = service.icon;
 
   return (
@@ -56,25 +56,24 @@ function Home() {
     { icon: Smartphone, title: "Recharge", desc: "Mobile, DTH & Data Card", link: "/recharge" },
     { icon: CreditCard, title: "Credit Card", desc: "Pay credit card bills", link: "/credit" },
     { icon: BarChart3, title: "Stock Market", desc: "Trade stocks & track trends", link: "/stocks" },
-    { icon: TrendingUp, title: "Investments", desc: "Mutual Funds & Gold", link: "/invest" },
-    { icon: Zap, title: "Insurance", desc: "Health, Life & Travel", link: "/insurance" },
+    { icon: Briefcase, title: "Freelance Gigs", desc: "Earn & secure payouts in Escrow", link: "/our-solutions" },
   ], []);
 
   const features = useMemo(() => [
     {
       icon: Shield,
       title: "100% Secure",
-      desc: "Bank-grade encryption and security protocols ensure your money stays safe. PCI DSS compliant and ISO 27001 certified."
+      desc: "Bank-grade encryption, PCI DSS compliance, and secured milestone escrow guarantees that protect both freelancers and clients."
     },
     {
       icon: Zap,
       title: "Instant Payments",
-      desc: "Transfer money to anyone, anywhere in seconds. No waiting, no delays - just instant transactions."
+      desc: "Transfer money via UPI in seconds, or receive immediate release of freelance escrow payouts straight to your bank account."
     },
     {
       icon: Users,
       title: "61+ Crore Users",
-      desc: "Join millions of Indians who trust Cloud income for their daily payments and financial needs."
+      desc: "Join millions of Indians who trust Cloud Income for personal payments and secure gig workspace contract transactions."
     },
     {
       icon: Lock,
@@ -170,7 +169,7 @@ function Home() {
                     icon={feature.icon}
                     title={feature.title}
                     description={feature.desc}
-                    delay={index * 100}
+                    delay={0}
                   />
                 ))}
               </div>
@@ -200,7 +199,7 @@ function Home() {
                     role={testimonial.role}
                     content={testimonial.content}
                     rating={testimonial.rating}
-                    delay={index * 150}
+                    delay={0}
                   />
                 ))}
               </div>

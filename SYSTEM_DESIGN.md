@@ -1,646 +1,272 @@
-# Cloud income Clone - System Design Documentation
+# Cloud Income - Complete System Design Documentation
+
+This document describes the high-level architecture, database schemas, API structures, real-time events, and security mechanisms of **Cloud Income** (a digital wallet, simulated stock market, and peer-to-peer gig marketplace hybrid).
+
+---
 
 ## 📋 Table of Contents
 1. [System Overview](#system-overview)
 2. [Architecture](#architecture)
 3. [Technology Stack](#technology-stack)
-4. [Database Schema](#database-schema)
+4. [Database Schemas](#database-schemas)
 5. [API Endpoints](#api-endpoints)
-6. [Authentication Flow](#authentication-flow)
-7. [Transaction Flow](#transaction-flow)
-8. [Frontend Architecture](#frontend-architecture)
-9. [Features](#features)
-10. [File Structure](#file-structure)
-11. [Setup Instructions](#setup-instructions)
-12. [Future Enhancements](#future-enhancements)
+6. [Real-time Events (Socket.IO)](#real-time-events-socketio)
+7. [Authentication & Authorization](#authentication--authorization)
+8. [Security & Sanitization Mechanisms](#security--sanitization-mechanisms)
+9. [Responsive 3D WebGL Canvas Rendering](#responsive-3d-webgl-canvas-rendering)
+10. [Database Seeding & Seeding Configurations](#database-seeding--seeding-configurations)
+11. [Setup & Execution Instructions](#setup--execution-instructions)
 
 ---
 
 ## 🎯 System Overview
-
-This is a **Cloud income/UPI payment application clone** built with a **React frontend** and **Node.js/Express backend**. The system allows users to:
-- Register and authenticate with phone number and PIN
-- Send money to other users via VPA (Virtual Payment Address)
-- View transaction history
-- Receive money via QR code
-- Track wallet balance, rewards, and gold points
+Cloud Income is a unified fintech and freelance ecosystem designed for student developers and clients:
+*   **Dual-Use Wallet:** Deposit simulated money via mock gateways, perform instant peer-to-peer (P2P) transfers via UPI/VPA, scan QR codes, and execute bank or UPI withdrawals.
+*   **Secure Freelance Escrow:** Locks client funds in milestone-based contracts, releasing funds to freelancers upon approved project milestones.
+*   **Stock Trading Engine:** Real-time stock portfolio tracker connected to a dynamic market database.
+*   **Gamified Rewards:** Tracks loyalty points (rewards) and virtual gold weights.
+*   **Super Admin Control:** Full management of user accounts, transaction logs, asset updates, stock listings, and role promotions.
 
 ---
 
 ## 🏗️ Architecture
 
-### Architecture Pattern
-The application follows a **Client-Server Architecture** with clear separation of concerns:
+The platform follows a decoupled **Client-Server Architecture** using REST APIs for standard CRUD actions, and Socket.IO WebSockets for real-time notifications:
 
 ```
-┌─────────────────┐         HTTP/REST API         ┌─────────────────┐
-│                 │ ────────────────────────────> │                 │
-│  React Client   │                               │  Express Server │
-│  (Frontend)     │ <──────────────────────────── │  (Backend)      │
-│                 │         JSON Responses        │                 │
-└─────────────────┘                               └─────────────────┘
-                                                           │
-                                                           │ MongoDB
-                                                           │ Queries
-                                                           ▼
-                                                  ┌─────────────────┐
-                                                  │   MongoDB       │
-                                                  │   Database      │
-                                                  └─────────────────┘
+┌────────────────────────────────────────────────────────┐
+│                      React Client                      │
+│                 (Zustand State Store)                  │
+└────────────────────────────────────────────────────────┘
+     ▲                           ▲                    ▲
+     │ HTTP REST (Axios)         │ WebSockets         │ Render
+     ▼                           ▼                    ▼
+┌──────────────────┐    ┌──────────────────┐    ┌───────────┐
+│  Express Server  │<-->│    Socket.IO     │    │ WebGL 3D  │
+│     (REST API)   │    │  (WS Events Feed)│    │ (ThreeJS) │
+└──────────────────┘    └──────────────────┘    └───────────┘
+         ▲
+         │ Mongoose ODM
+         ▼
+┌──────────────────┐
+│  MongoDB Atlas   │
+└──────────────────┘
 ```
 
-### Key Components:
-1. **Frontend (Client)**: React SPA with Zustand state management
-2. **Backend (Server)**: Express.js REST API
-3. **Database**: MongoDB with Mongoose ODM
-4. **Authentication**: JWT (JSON Web Tokens)
+### Key Architectural Guidelines
+1.  **Atomic Balance Transactions:** Direct balance updates on the database are executed using atomic operations (`findOneAndUpdate` with `$inc` and conditional filters) to prevent race conditions or double-spending.
+2.  **Dual Transaction Logs:** Peer-to-peer transfers create two separate transaction entries (one `DEBIT` log for the sender and one `CREDIT` log for the receiver) sharing a unique `reference` (UUIDv4) to simplify transaction stream queries for individual user views.
 
 ---
 
 ## 💻 Technology Stack
 
-### Frontend
-- **React 19.1.1** - UI library
-- **React Router DOM 7.9.5** - Client-side routing
-- **Zustand 5.0.8** - State management
-- **Axios 1.13.2** - HTTP client
-- **Tailwind CSS 4.1.17** - Styling framework
-- **Vite 7.1.7** - Build tool and dev server
+### Frontend (Client)
+*   **React 19.1.1** - User Interface Core
+*   **React Router DOM 7.9.5** - Page Routing
+*   **Zustand 5.0.8** - Lightweight Client State Management
+*   **Axios 1.13.2** - HTTP REST Client
+*   **Socket.IO Client 4.8.3** - WebSocket Event Handlers
+*   **Three.js, React Three Fiber & Drei** - 3D WebGL Graphics Engine
+*   **Tailwind CSS 4.1.17** - CSS Layouts & Components Styling
+*   **Framer Motion** - Micro-animations & Transitions
+*   **Recharts 3.6.0** - SVG Charts & Visual Analytics
 
-### Backend
-- **Node.js** - Runtime environment
-- **Express 5.1.0** - Web framework
-- **Mongoose 8.19.3** - MongoDB ODM
-- **JSON Web Token 9.0.2** - Authentication
-- **bcrypt 6.0.0** - Password hashing
-- **UUID 13.0.0** - Unique transaction references
-- **CORS 2.8.5** - Cross-origin resource sharing
-- **Morgan 1.10.1** - HTTP request logger
-
-### Database
-- **MongoDB** - NoSQL database
+### Backend (Server)
+*   **Node.js** - Runtime Environment
+*   **Express 5.2.1** - Web Framework
+*   **Socket.IO 4.8.3** - WebSocket Event Server
+*   **Mongoose 8.19.3** - MongoDB ODM
+*   **JSON Web Token 9.0.2** - Bearer Authorization Tokens
+*   **Bcrypt 6.0.0** - Cryptographic PIN Hashing
+*   **UUID 13.0.0** - Unique Reference Identifiers
 
 ---
 
-## 🗄️ Database Schema
+## 🗄️ Database Schemas
 
-### User Model
+### 1. User Schema (`User.js`)
+Stores user profiles, access control, and financial balances:
 ```javascript
 {
-  name: String (required),
-  phone: String (required, unique),
-  vpa: String (required, unique),        // Virtual Payment Address
-  pin: String (required, hashed),        // Hashed using bcrypt
-  balance: Number (default: 1000),       // Wallet balance
-  rewards: Number (default: 0),          // Rewards points
-  gold: Number (default: 0),             // Gold points (in gm)
-  createdAt: Date (auto),
-  updatedAt: Date (auto)
+  name: { type: String, required: true },
+  phone: { type: String, required: true, unique: true },
+  vpa: { type: String, required: true, unique: true }, // Virtual Payment Address
+  pin: { type: String, required: true },               // Hashed UPI PIN
+  balance: { type: Number, default: 1000 },            // Available cash
+  rewards: { type: Number, default: 0 },               // Accrued loyalty credits
+  gold: { type: Number, default: 0 },                  // Accrued virtual gold (gm)
+  isAdmin: { type: Boolean, default: false },          // Super Admin flag
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
-### Transaction Model
+### 2. Transaction Schema (`Transaction.js`)
+Tracks cash flows, deposits, P2P transfers, and withdrawals:
 ```javascript
 {
-  sender: ObjectId (ref: User, required),
-  receiver: ObjectId (ref: User, required),
-  amount: Number (required),
-  type: String (enum: ['DEBIT', 'CREDIT'], required),
-  counterpartyName: String (required),   // Name of the other party
-  note: String (default: ''),
-  reference: String (unique),            // UUID for transaction tracking
-  createdAt: Date (auto),
-  updatedAt: Date (auto)
+  sender: { type: Schema.Types.ObjectId, ref: 'User' },
+  receiver: { type: Schema.Types.ObjectId, ref: 'User' },
+  amount: { type: Number, required: true },
+  type: { type: String, enum: ['DEBIT', 'CREDIT'], required: true },
+  counterpartyName: { type: String, required: true },
+  note: { type: String, default: '' },
+  reference: { type: String, required: true },        // UUID reference link
+  createdAt: Date
 }
 ```
 
-### Transaction Flow Design
-- Each money transfer creates **TWO transaction records**:
-  1. **DEBIT transaction** for the sender (money going out)
-  2. **CREDIT transaction** for the receiver (money coming in)
-- Both transactions share the same `reference` (UUID) for tracking
-- This design allows easy querying of transaction history from both perspectives
+### 3. GlobalStock Schema (`GlobalStock.js`)
+Stores available trade stocks in the market:
+```javascript
+{
+  symbol: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  change: { type: Number, default: 0 },
+  changePercent: { type: Number, default: 0 }
+}
+```
+
+### 4. Stock Holding Schema (`Stock.js`)
+Tracks stock portfolios held by users:
+```javascript
+{
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  symbol: { type: String, required: true },
+  companyName: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  averagePrice: { type: Number, required: true },
+  currentPrice: { type: Number, required: true }
+}
+```
+
+### 5. StockTransaction Schema (`StockTransaction.js`)
+Audits users' stock trading activities:
+```javascript
+{
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  symbol: { type: String, required: true },
+  companyName: { type: String, required: true },
+  type: { type: String, enum: ['BUY', 'SELL'], required: true },
+  quantity: { type: Number, required: true },
+  price: { type: Number, required: true },
+  totalAmount: { type: Number, required: true },
+  reference: { type: String, required: true }
+}
+```
 
 ---
 
 ## 🔌 API Endpoints
 
-### Authentication Routes (`/api/auth`)
+### 1. Authentication Routes (`/api/auth`)
+*   `POST /signup` - Register user. Checks for adminSecret to grant admin privilege.
+*   `POST /login` - Login user using phone number and PIN. Returns JWT.
+*   `GET /me` - Returns logged-in user profile [Protected].
 
-#### POST `/api/auth/signup`
-- **Purpose**: Register a new user
-- **Request Body**:
-  ```json
-  {
-    "name": "John Doe",
-    "phone": "1234567890",
-    "vpa": "john@bank",
-    "pin": "1234"
-  }
-  ```
-- **Response**:
-  ```json
-  {
-    "token": "jwt_token_here",
-    "user": {
-      "id": "user_id",
-      "name": "John Doe",
-      "phone": "1234567890",
-      "vpa": "john@bank",
-      "balance": 1000,
-      "rewards": 0,
-      "gold": 0
-    }
-  }
-  ```
+### 2. Transaction Routes (`/api/txn`)
+*   `POST /send` - Execute a P2P UPI transfer to another user. Requires valid PIN.
+*   `GET /recent` - Get recent transactions for dashboard feed [Protected].
+*   `POST /qr-pay` - Process transfer via scanned VPA QR code [Protected].
+*   `POST /simulate-receive` - Sandbox scanner utility to trigger simulated incoming cash transfers.
+*   `POST /razorpay-order` - Generate mock payment order inside the deposit app simulator.
+*   `POST /razorpay-verify` - Verify and credit wallet balance following simulated deposit.
+*   `POST /withdraw` - Process withdrawal back to UPI or bank account. Requires valid PIN.
 
-#### POST `/api/auth/login`
-- **Purpose**: Authenticate existing user
-- **Request Body**:
-  ```json
-  {
-    "phone": "1234567890",
-    "pin": "1234"
-  }
-  ```
-- **Response**: Same as signup
+### 3. Stock Routes (`/api/stocks`)
+*   `GET /market` - Get list of stocks and prices [Protected].
+*   `GET /history/:symbol` - Get mock historical price data for charts [Protected].
+*   `GET /holdings` - Get current user holdings [Protected].
+*   `POST /buy` - Buy shares. Deducts balance, updates holdings, logs stock transaction.
+*   `POST /sell` - Sell shares. Credits balance, updates holdings, logs stock transaction.
+*   `GET /transactions` - Get personal stock trading history logs.
 
-#### GET `/api/auth/me`
-- **Purpose**: Get current user profile
-- **Headers**: `Authorization: Bearer <token>`
-- **Response**: User object (same as signup response)
-
-### Transaction Routes (`/api/txn`)
-
-#### POST `/api/txn/send`
-- **Purpose**: Send money to another user
-- **Headers**: `Authorization: Bearer <token>`
-- **Request Body**:
-  ```json
-  {
-    "vpa": "receiver@bank",
-    "amount": 100,
-    "note": "Payment for services"
-  }
-  ```
-- **Response**:
-  ```json
-  {
-    "message": "Money sent successfully",
-    "transaction": {
-      "id": "transaction_id",
-      "amount": 100,
-      "receiver": "Receiver Name",
-      "reference": "uuid-reference"
-    }
-  }
-  ```
-- **Validation**:
-  - Amount must be > 0
-  - Sender must have sufficient balance
-  - Receiver must exist
-  - Cannot send to yourself
-
-#### GET `/api/txn/recent`
-- **Purpose**: Get recent transactions for current user
-- **Headers**: `Authorization: Bearer <token>`
-- **Response**:
-  ```json
-  {
-    "transactions": [
-      {
-        "id": "txn_id",
-        "amount": 100,
-        "type": "DEBIT" | "CREDIT",
-        "counterpartyName": "Other User Name",
-        "note": "Payment note",
-        "createdAt": "2024-01-01T00:00:00.000Z"
-      }
-    ]
-  }
-  ```
-- **Notes**:
-  - Returns last 20 transactions
-  - Sorted by creation date (newest first)
-  - Type is determined based on whether user is sender or receiver
-
-#### POST `/api/txn/qr-pay`
-- **Purpose**: Pay via QR code
-- **Headers**: `Authorization: Bearer <token>`
-- **Request Body**:
-  ```json
-  {
-    "qrData": "receiver@bank",
-    "amount": 100,
-    "note": "QR payment"
-  }
-  ```
-- **Response**: Same as send endpoint
-- **Note**: Currently, QR data is treated as VPA. In production, QR codes would contain structured payment data.
+### 4. Admin Routes (`/api/admin`)
+*   `GET /users` - Lists all users.
+*   `GET /users/:id` - Inspect detailed profile, stock holdings, and cash history logs.
+*   `PUT /users/:id/balance` - Set wallet balance, gold quantity, or rewards points.
+*   `DELETE /users/:id` - Deletes user and purges holdings/transactions database logs.
+*   `GET /transactions` - Audit logs of all regular and stock transactions.
+*   `POST /stocks` - Add new stock ticker listing to the market.
+*   `PUT /stocks/:symbol` - Modify name/price and recalculate price change statistics.
+*   `DELETE /stocks/:symbol` - Delete stock listing from the global market.
+*   `POST /promote` - Promote user to Super Admin using phone number or VPA.
 
 ---
 
-## 🔐 Authentication Flow
+## 🔄 Real-time Events (Socket.IO)
 
-### Authentication Mechanism
-- **JWT (JSON Web Token)** based authentication
-- Token expires in **7 days**
-- Token is sent in `Authorization` header: `Bearer <token>`
+WebSocket rooms are segmented per user (`user:${userId}`). Real-time notifications are pushed by the backend on transaction occurrences:
+
+1.  **`transaction:new`**: Emitted to both sender and receiver containing transaction details and updated cash balances.
+2.  **`balance:update`**: Emitted to synchronize client header/profile statistics with database wallet balance changes.
+3.  **`payment:received`**: Emitted to receivers, containing the sender's name and amount, triggering success chimes and overlay notifications.
+
+---
+
+## 🔐 Authentication & Authorization
 
 ### Flow Diagram
 ```
-1. User Registration/Login
-   └─> Server validates credentials
-       └─> Server generates JWT token
-           └─> Token stored in localStorage (frontend)
-               └─> Token added to API requests via Axios interceptor
+1. Client POST `/login` / `/signup`
+   └─> Server signs JWT token (expires in 7 days)
+       └─> Client stores token in localStorage
+           └─> Axios interceptor appends "Authorization: Bearer <token>" to requests.
 
-2. Protected Route Access
-   └─> Frontend checks for token in localStorage
-       └─> If token exists: Add to request header
-           └─> Backend middleware validates token
-               └─> If valid: Attach user to request object
-               └─> If invalid: Return 401 Unauthorized
-
-3. Logout
-   └─> Remove token from localStorage
-       └─> Clear token from Axios headers
-           └─> Redirect to login page
-```
-
-### Authentication Middleware
-Located in `server/src/middleware/auth.js`:
-- Extracts token from `Authorization` header
-- Verifies token using JWT secret
-- Fetches user from database
-- Attaches user to `req.user` for route handlers
-
-### PIN Security
-- PINs are **hashed using bcrypt** (10 salt rounds)
-- Original PIN is never stored in database
-- PIN comparison is done using `bcrypt.compare()`
-
----
-
-## 💸 Transaction Flow
-
-### Send Money Flow
-```
-1. User enters receiver VPA, amount, and optional note
-   └─> Frontend validates input (amount > 0)
-       └─> POST /api/txn/send
-
-2. Backend Processing:
-   a. Validate amount > 0
-   b. Check sender balance >= amount
-   c. Find receiver by VPA
-   d. Validate receiver exists and is not sender
-   e. Generate unique reference (UUID)
-   f. Create DEBIT transaction (sender)
-   g. Create CREDIT transaction (receiver)
-   h. Update sender balance: balance -= amount
-   i. Update receiver balance: balance += amount
-   j. Save all changes (transaction + balance updates)
-   └─> Return success response
-
-3. Frontend receives response
-   └─> Display success message
-       └─> Optionally refresh transaction history
-```
-
-### Transaction Atomicity
-- All database operations (transaction creation + balance updates) are executed using `Promise.all()`
-- In a production environment, this should use **MongoDB transactions** to ensure atomicity
-- Current implementation may have race conditions in high-concurrency scenarios
-
-### Balance Management
-- Balance is stored directly on User model
-- Updated synchronously during transaction
-- Default starting balance: ₹1000
-
----
-
-## 🎨 Frontend Architecture
-
-### State Management
-- **Zustand** store for authentication state (`useAuth` hook)
-- Store manages:
-  - `user`: Current user object
-  - `token`: JWT token
-  - `loading`: Loading state
-  - Methods: `login()`, `signup()`, `logout()`, `initFromStorage()`
-
-### Routing
-- **React Router DOM** for client-side routing
-- Routes:
-  - `/` - Dashboard (protected)
-  - `/send` - Send Money (protected)
-  - `/bills` - Pay Bills (protected)
-  - `/login` - Login (public)
-  - `/signup` - Signup (public)
-- Route protection handled in `App.jsx`:
-  - If user is authenticated: Show protected routes, redirect others to `/`
-  - If user is not authenticated: Show public routes, redirect others to `/login`
-
-### API Integration
-- **Axios** instance configured in `lib/api.js`
-- Base URL: `http://localhost:4000/api` (configurable via env variable)
-- `setAuth()` function adds/removes Authorization header
-- All API calls use this centralized instance
-
-### Component Structure
-```
-App.jsx (Root)
-├── Routes
-    ├── Dashboard
-    │   ├── Navbar
-    │   ├── MoneyTile (Balance, Rewards, Gold)
-    │   ├── Card (Quick Actions)
-    │   ├── TransactionItem (Transaction list)
-    │   └── QRModal
-    ├── SendMoney
-    │   ├── Navbar
-    │   └── Card (Send form)
-    ├── PayBills
-    │   ├── Navbar
-    │   └── Card (Bills form)
-    ├── Login
-    │   ├── Navbar
-    │   └── Card (Login form)
-    └── Signup
-        ├── Navbar
-        └── Card (Signup form)
-```
-
-### Styling
-- **Tailwind CSS** for utility-first styling
-- Responsive design with mobile-first approach
-- Custom color scheme using CSS variables (primary, soft, ink)
-
----
-
-## ✨ Features
-
-### Implemented Features
-1. ✅ User Registration and Login
-2. ✅ JWT-based Authentication
-3. ✅ Send Money via VPA
-4. ✅ Transaction History
-5. ✅ Wallet Balance Display
-6. ✅ Rewards and Gold Points Tracking
-7. ✅ QR Code Generation (UI only)
-8. ✅ QR Payment (backend endpoint)
-9. ✅ Protected Routes
-10. ✅ Error Handling
-11. ✅ Responsive UI
-
-### Partially Implemented
-- ⚠️ QR Code Scanning (UI exists, needs QR library integration)
-- ⚠️ Pay Bills (page exists, needs backend integration)
-- ⚠️ Recharge (route exists, needs implementation)
-
----
-
-## 📁 File Structure
-
-```
-Cloud income/
-├── client/                          # React Frontend
-│   ├── src/
-│   │   ├── components/              # Reusable components
-│   │   │   ├── card.jsx
-│   │   │   ├── MoneyTitle.jsx
-│   │   │   ├── Navabar.jsx
-│   │   │   ├── QRMOdal.jsx
-│   │   │   ├── Toast.jsx
-│   │   │   └── TransactionItem.jsx
-│   │   ├── hooks/                   # Custom React hooks
-│   │   │   └── useAuth.js           # Zustand auth store
-│   │   ├── lib/                     # Utilities
-│   │   │   └── api.js               # Axios instance
-│   │   ├── pages/                   # Page components
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── aignup.jsx
-│   │   │   ├── sendMoney.jsx
-│   │   │   └── payBills.jsx
-│   │   ├── App.jsx                  # Root component with routing
-│   │   ├── router.jsx               # Route definitions
-│   │   ├── main.jsx                 # Entry point
-│   │   └── index.css                # Global styles
-│   ├── package.json
-│   └── vite.config.js
-│
-├── server/                          # Express Backend
-│   ├── src/
-│   │   ├── config/
-│   │   │   └── database.js          # MongoDB connection
-│   │   ├── middleware/
-│   │   │   └── auth.js              # JWT authentication middleware
-│   │   ├── models/
-│   │   │   ├── User.js              # User schema
-│   │   │   └── Transaction.js       # Transaction schema
-│   │   ├── routes/
-│   │   │   ├── auth.js              # Auth endpoints
-│   │   │   └── transactions.js      # Transaction endpoints
-│   │   ├── utils/                   # Utility functions (empty)
-│   │   └── app.js                   # Express app setup
-│   ├── package.json
-│   └── .env                         # Environment variables (not in repo)
-│
-└── SYSTEM_DESIGN.md                 # This file
+2. Access Verification:
+   Client requests endpoint -> auth middleware -> Decodes token -> Sets req.user.
+   
+3. Admin Permission Verification:
+   Endpoint -> auth -> adminAuth middleware -> Rejects with 403 if req.user.isAdmin !== true.
 ```
 
 ---
 
-## 🚀 Setup Instructions
+## 🛡️ Security & Sanitization Mechanisms
+*   **NoSQL Injection Sanitization:** Casts body fields (`name`, `phone`, `vpa`, `pin`, `symbol`) explicitly using `String()` functions before performing database queries (`findOne`, `findOneAndUpdate`, etc.) to prevent object-based query operators injection (e.g. `{"$gt": ""}`).
+*   **Hashed Credential Standards:** PIN values are hashed using `bcrypt` (10 rounds) and verified using cryptographic comparisons on `/send` and `/withdraw` actions.
+
+---
+
+## 📐 Responsive 3D WebGL Canvas Rendering
+The Hero section utilizes WebGL 3D models (Bitcoin and Credit Card) inside a `Canvas` with an `ErrorBoundary` wrapping fallback graphics:
+
+*   **Responsive Breakpoints:**
+    *   **Mobile (< 640px):** Camera FOV centered. Bitcoin model scale: `0.35`, position: `[-2.4, 4.0, -3.5]`. Credit card model scale: `0.55`, position: `[1.0, -2.8, -3.5]`.
+    *   **Tablet (< 1024px):** Bitcoin model scale: `0.55`, position: `[-2.8, 3.5, -3]`. Credit card model scale: `0.8`, position: `[2.8, -1.2, -3]`.
+    *   **Desktop (>= 1024px):** Bitcoin model scale: `0.75`, position: `[-4.5, 2.5, -3]`. Credit card model scale: `1.1`, position: `[4.5, -0.5, -3]`.
+*   **Fallback Assets Layout:** Uses equivalent responsive coordinates with CSS overlays (`bitcoinLeft`, `bitcoinTop`, `cardRight`, `cardBottom`) to display 3D falls when WebGL context gets lost or is unsupported.
+
+---
+
+## 🌱 Database Seeding & Seeding Configurations
+On first initialization, the database connection config script (`server/src/config/database.js`) checks the `GlobalStock` collection:
+*   If empty, it seeds the collection with **10 default blue-chip market stocks** (RELIANCE, TCS, HDFCBANK, INFYS, ICICIBANK, BHARTIALRT, SBI, HINDUNILVR, ITC, L&T) set to initial mock listing prices.
+
+---
+
+## 🚀 Setup & Execution Instructions
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- MongoDB (local or cloud instance)
-- npm or yarn
+*   Node.js (v18 or higher)
+*   MongoDB Atlas connection URI
 
-### Backend Setup
+### Server Configuration (`server/.env`)
+```env
+PORT=4000
+NODE_ENV=development
+MONGO_URI=mongodb+srv://...
+JWT_SECRET=your_jwt_secret_key
+CLIENT_URL=http://localhost:5173
+```
 
-1. **Navigate to server directory**:
-   ```bash
-   cd server
-   ```
+### Client Configuration (`client/.env`)
+```env
+VITE_API_URL=http://localhost:4000/api
+```
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Create `.env` file**:
-   ```env
-   MONGO_URI=mongodb://localhost:27017/Cloud income
-   JWT_SECRET=your_secret_key_here
-   PORT=4000
-   ```
-
-4. **Start MongoDB** (if using local instance):
-   ```bash
-   mongod
-   ```
-
-5. **Start the server**:
-   ```bash
-   npm run dev
-   ```
-   Server will run on `http://localhost:4000`
-
-### Frontend Setup
-
-1. **Navigate to client directory**:
-   ```bash
-   cd client
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Create `.env` file** (optional):
-   ```env
-   VITE_API_URL=http://localhost:4000/api
-   ```
-
-4. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
-   Frontend will run on `http://localhost:5173` (default Vite port)
-
-### Testing the Application
-
-1. **Register a new user**:
-   - Navigate to `/signup`
-   - Enter name, phone, VPA, and PIN
-   - Submit form
-
-2. **Login**:
-   - Navigate to `/login`
-   - Enter phone and PIN
-   - Submit form
-
-3. **Send Money**:
-   - Navigate to `/send`
-   - Enter receiver VPA, amount, and note
-   - Submit form
-
-4. **View Transactions**:
-   - Dashboard shows recent transactions
-   - Balance, rewards, and gold are displayed
-
----
-
-## 🔮 Future Enhancements
-
-### Security Improvements
-- [ ] Implement rate limiting for API endpoints
-- [ ] Add request validation using libraries like `joi` or `express-validator`
-- [ ] Implement MongoDB transactions for atomic operations
-- [ ] Add PIN change functionality
-- [ ] Implement refresh tokens for better security
-- [ ] Add CORS configuration for production
-- [ ] Implement input sanitization to prevent XSS attacks
-
-### Features
-- [ ] Implement real QR code generation and scanning
-- [ ] Add bill payment integration
-- [ ] Add recharge functionality (mobile, DTH, etc.)
-- [ ] Implement transaction filters and search
-- [ ] Add transaction export (PDF/CSV)
-- [ ] Implement notifications system
-- [ ] Add transaction categories and tags
-- [ ] Implement recurring payments
-- [ ] Add money request feature
-- [ ] Implement bank account linking
-- [ ] Add transaction limits and daily limits
-
-### Database Improvements
-- [ ] Add database indexes for frequently queried fields
-- [ ] Implement database backup strategy
-- [ ] Add transaction archiving for old transactions
-- [ ] Implement database migrations
-
-### UI/UX Improvements
-- [ ] Add loading skeletons
-- [ ] Implement proper error boundaries
-- [ ] Add toast notifications for success/error
-- [ ] Improve mobile responsiveness
-- [ ] Add dark mode support
-- [ ] Implement offline support (PWA)
-- [ ] Add animations and transitions
-
-### Testing
-- [ ] Write unit tests for backend routes
-- [ ] Write integration tests for API endpoints
-- [ ] Write unit tests for React components
-- [ ] Add end-to-end tests
-- [ ] Implement test coverage reporting
-
-### DevOps
-- [ ] Set up CI/CD pipeline
-- [ ] Add Docker containerization
-- [ ] Implement environment-specific configurations
-- [ ] Add logging and monitoring
-- [ ] Set up error tracking (e.g., Sentry)
-
-### Performance
-- [ ] Implement API response caching
-- [ ] Add database query optimization
-- [ ] Implement pagination for transaction history
-- [ ] Add lazy loading for components
-- [ ] Optimize bundle size
-
----
-
-## 📝 Notes
-
-### Current Limitations
-1. **No Atomic Transactions**: Balance updates and transaction creation are not wrapped in MongoDB transactions, which could lead to inconsistencies in high-concurrency scenarios.
-
-2. **QR Code Implementation**: QR code generation is currently a placeholder. Need to integrate a QR library like `qrcode` or `react-qr-code`.
-
-3. **Error Handling**: Basic error handling is implemented, but could be improved with better error messages and logging.
-
-4. **Validation**: Client-side validation exists, but server-side validation is minimal. Should add comprehensive validation using libraries like `joi` or `express-validator`.
-
-5. **Security**: JWT secret is hardcoded as fallback. Should always use environment variables in production.
-
-6. **Testing**: No tests are currently written. Should add comprehensive test coverage.
-
-### Design Decisions
-1. **Dual Transaction Records**: Each money transfer creates two transaction records (DEBIT and CREDIT) to simplify querying transaction history from both user perspectives.
-
-2. **Balance on User Model**: Balance is stored directly on the User model rather than calculated from transactions. This improves performance but requires careful balance management.
-
-3. **VPA as Identifier**: Uses VPA (Virtual Payment Address) instead of phone number for money transfers, similar to real UPI systems.
-
-4. **Zustand for State Management**: Chose Zustand over Redux for simplicity and less boilerplate, suitable for this application's scale.
-
----
-
-## 🤝 Contributing
-
-This is a learning project. Feel free to:
-- Add new features
-- Improve existing code
-- Fix bugs
-- Enhance documentation
-- Add tests
-
----
-
-## 📄 License
-
-This project is for educational purposes.
-
----
-
-**Last Updated**: 2024
-**Version**: 1.0.0
-
+### How to Run
+1.  **Start Server:** `cd server && npm install && npm run dev`
+2.  **Start Client:** `cd client && npm install && npm run dev`

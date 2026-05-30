@@ -1,0 +1,59 @@
+# Walkthrough - Super Admin System
+
+The Super Admin system has been successfully implemented and integrated into both the backend API and frontend React client.
+
+## What Was Added
+
+### 1. Backend Changes
+- **User Schema**: Added `isAdmin` field to support checking administrative permissions.
+- **GlobalStock Schema**: Created a new `GlobalStock` database collection. This migrates the hardcoded stock market listings to the database.
+- **Database Seeding**: Added seeding function inside `connectDB()` that populates `GlobalStock` with the default 10 market stocks (Reliance, TCS, etc.) on first launch.
+- **Admin Auth Middleware**: Created `adminAuth` middleware to reject non-admin requests with a `403 Forbidden` response.
+- **Admin APIs**:
+  - `GET /api/admin/users`: Lists all users.
+  - `GET /api/admin/users/:id`: Details a specific user, holdings, and transactions.
+  - `PUT /api/admin/users/:id/balance`: Sets/Updates user balance, gold, and reward points.
+  - `DELETE /api/admin/users/:id`: Deletes user profile and associated holdings/transactions.
+  - `GET /api/admin/transactions`: Audits all UPI and stock trades.
+  - `POST /api/admin/stocks`: Lists a new stock.
+  - `PUT /api/admin/stocks/:symbol`: Modifies price and recalculates price change statistics.
+  - `DELETE /api/admin/stocks/:symbol`: Deletes stock listings.
+  - `POST /api/admin/promote`: Promotes a user by phone or VPA.
+- **CLI Promote Script**: Added `server/src/scripts/promoteAdmin.js` to let developers promote any user via CLI:
+  ```bash
+  node server/src/scripts/promoteAdmin.js <phoneOrVpa>
+  ```
+
+### 2. Frontend Changes
+- **Admin Signup**: Updated [signup.jsx](file:///d:/desktop%20stuff/web%20dev/cloud%20Income/cloud-income/client/src/pages/signup.jsx) to add a checkbox option "Sign up as Super Admin" and password input for `adminSecret`.
+- **Navbar Integration**: Updated [Navbar.jsx](file:///d:/desktop%20stuff/web%20dev/cloud%20Income/cloud-income/client/src/components/Navbar.jsx) to append the "Admin Panel" link dynamically for authenticated Super Admins.
+- **Protected Routing**: Configured the `/admin` path inside [App.jsx](file:///d:/desktop%20stuff/web%20dev/cloud%20Income/cloud-income/client/src/App.jsx) restricted exclusively to `user.isAdmin === true`.
+- **Admin Dashboard**: Created [AdminDashboard.jsx](file:///d:/desktop%20stuff/web%20dev/cloud%20Income/cloud-income/client/src/pages/AdminDashboard.jsx) inside the client featuring:
+  - **Overview**: High-level platform statistics (users, assets, trade totals) and graphs showing stock price comparisons and user distributions.
+  - **User Manager**: Allows administrators to search users, inspect details, add/subtract wallet balances, gold, or reward points, and delete accounts.
+  - **Transactions Log**: View all transactions (UPI transfers and stock purchases/sells) across the platform.
+  - **Stock Manager**: Allows dynamic creation, pricing updates, and deletion of tradable market stocks.
+
+## How to Test
+
+1. **Sign up a Standard User**:
+   - Go to `/signup`.
+   - Sign up a normal user (e.g. `Test User`, phone: `9876543210`, VPA: `test@pay`).
+   - Notice they do not see any Admin Panel link.
+
+2. **Sign up a Super Admin**:
+   - Go to `/signup`.
+   - Check the **Sign up as Super Admin** box.
+   - Enter the Admin Secret Key: `superadmin123` (defined as fallback in backend).
+   - Once signed up, the **Admin Panel** link will appear in the navigation bar.
+
+3. **Modify User Assets**:
+   - Go to the **Admin Panel** -> **User Management** tab.
+   - You will see the standard user in the table.
+   - Click the Edit/Pencil icon. Update their balance to `50000`, gold to `10.5`, and rewards to `500`.
+   - Log in as the standard user, and verify their dashboard now displays the updated values.
+
+4. **Add or Change Stock Prices**:
+   - Under **Market Stocks** tab, click **Add New Stock** (e.g. `GOOGL`, Google Inc, price `150`).
+   - You can also modify existing stock prices (e.g. raise RELIANCE to `2600.00`).
+   - Verify that when standard users open the `/stocks` trading page, the new/updated stock prices reflect instantly and they can buy/sell them.

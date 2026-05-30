@@ -13,8 +13,10 @@ export default function Signup() {
     phone: "",
     vpa: "",
     pin: "",
+    adminSecret: "",
   });
 
+  const [isSecretAdmin, setIsSecretAdmin] = useState(false);
   const [err, setErr] = useState("");
 
   const handleChange = (e) => {
@@ -25,7 +27,12 @@ export default function Signup() {
     e.preventDefault();
     setErr("");
     try {
-      await signup(form);
+      // Filter out adminSecret if not signing up as admin
+      const payload = { ...form };
+      if (!isSecretAdmin) {
+        delete payload.adminSecret;
+      }
+      await signup(payload);
       nav("/");
     } catch (e) {
       setErr(e?.response?.data?.message || "Signup failed");
@@ -84,8 +91,39 @@ export default function Signup() {
               required
             />
 
+            {/* Super Admin Toggle */}
+            <div className="flex items-center gap-2 mt-1">
+              <input
+                type="checkbox"
+                id="isSecretAdmin"
+                checked={isSecretAdmin}
+                onChange={(e) => {
+                  setIsSecretAdmin(e.target.checked);
+                  if (!e.target.checked) {
+                    setForm(prev => ({ ...prev, adminSecret: "" }));
+                  }
+                }}
+                className="w-4 h-4 rounded text-[#c2652a] focus:ring-[#c2652a] accent-[#c2652a] cursor-pointer"
+              />
+              <label htmlFor="isSecretAdmin" className="text-[#605850] font-medium cursor-pointer select-none">
+                Sign up as Super Admin
+              </label>
+            </div>
+
+            {isSecretAdmin && (
+              <input
+                name="adminSecret"
+                value={form.adminSecret}
+                onChange={handleChange}
+                type="password"
+                placeholder="Admin Secret Key"
+                className="bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] px-4 py-2 focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] placeholder-[#8c7e72] transition animate-fade-in"
+                required
+              />
+            )}
+
             {/* Submit Button */}
-            <button className="bg-[#c2652a] text-white rounded-[8px] py-2.5 mt-2 font-semibold text-[15px] hover:bg-[#a8541f] transition-all">
+            <button className="bg-[#c2652a] text-white rounded-[8px] py-2.5 mt-2 font-semibold text-[15px] hover:bg-[#a8541f] transition-all cursor-pointer">
               Create Account
             </button>
           </form>

@@ -212,7 +212,7 @@ const Footer = () => {
               {
                 title: "General",
                 items: [
-                  "About Us", "Careers", "Investor Relations", "Contact Us",
+                  "About Us", "Careers", "Trust & Safety", "Contact Us",
                   "Press", "Merchant Partners", "Blog",
                 ],
               },

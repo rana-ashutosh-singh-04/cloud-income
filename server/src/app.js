@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import express from 'express'
+import mongoose from 'mongoose'
 import { createServer } from 'http'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -8,7 +9,8 @@ import { initializeSocket } from './config/socket.js'
 import authRoutes from './routes/auth.js'
 import transactionRoutes from './routes/transactions.js'
 import stockRoutes from './routes/stocks.js'
-
+import adminRoutes from './routes/admin.js'
+  
 const app = express()
 const server = createServer(app)
 
@@ -20,13 +22,14 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
 
-// Connect to database
-connectDB()
+
+connectDB();
 
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/txn', transactionRoutes)
 app.use('/api/stocks', stockRoutes)
+app.use('/api/admin', adminRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

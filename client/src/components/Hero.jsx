@@ -1,7 +1,9 @@
 import { Canvas } from "@react-three/fiber";
 import { useGLTF, Float, Environment, ContactShadows } from "@react-three/drei";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { Suspense, useState, useEffect, useMemo } from "react";
+import ErrorBoundary from "./ErrorBoundary";
 
 const NAVBAR_HEIGHT = 64; // px
 
@@ -9,29 +11,123 @@ const NAVBAR_HEIGHT = 64; // px
 useGLTF.preload("/models/bitcoin_3d_model.glb");
 useGLTF.preload("/models/credit_card.glb");
 
-const BitcoinModel = ({ isMobile }) => {
+const BitcoinModel = ({ screenSize }) => {
   const { scene } = useGLTF("/models/bitcoin_3d_model.glb");
   const clonedScene = useMemo(() => scene.clone(), [scene]);
-  const scale = isMobile ? 0.5 : 0.75;
+  const scale = screenSize === "mobile" ? 0.35 : screenSize === "tablet" ? 0.55 : 0.75;
   return <primitive object={clonedScene} scale={scale} dispose={null} />;
 };
 
-const CreditCardModel = ({ isMobile }) => {
+const CreditCardModel = ({ screenSize }) => {
   const { scene } = useGLTF("/models/credit_card.glb");
   const clonedScene = useMemo(() => scene.clone(), [scene]);
-  const scale = isMobile ? 0.7 : 1.1;
+  const scale = screenSize === "mobile" ? 0.55 : screenSize === "tablet" ? 0.8 : 1.1;
   return <primitive object={clonedScene} scale={scale} rotation={[0.5, -0.5, 0]} dispose={null} />;
 };
 
+const Hero3DFallback = ({ screenSize }) => {
+  const isMobile = screenSize === "mobile";
+  const isTablet = screenSize === "tablet";
+  
+  const bitcoinScale = isMobile ? "90px" : isTablet ? "180px" : "280px";
+  const bitcoinLeft = isMobile ? "2%" : isTablet ? "5%" : "10%";
+  const bitcoinTop = isMobile ? "12%" : isTablet ? "12%" : "20%";
+
+  const cardScale = isMobile ? "110px" : isTablet ? "220px" : "320px";
+  const cardRight = isMobile ? "2%" : isTablet ? "4%" : "8%";
+  const cardBottom = isMobile ? "10%" : isTablet ? "15%" : "20%";
+
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+      {/* Golden Bitcoin Fallback Image */}
+      <div 
+        className="absolute transition-all duration-1000"
+        style={{
+          left: bitcoinLeft,
+          top: bitcoinTop,
+          width: bitcoinScale,
+          height: "auto",
+          animation: "floatSlow 6s ease-in-out infinite",
+          filter: "drop-shadow(0 20px 40px rgba(194, 101, 42, 0.2))",
+        }}
+      >
+        <img 
+          src="/models/bitcoin_fallback.png" 
+          alt="Bitcoin model fallback" 
+          className="w-full h-auto object-contain"
+        />
+      </div>
+
+      {/* Credit Card Fallback Image */}
+      <div 
+        className="absolute transition-all duration-1000"
+        style={{
+          right: cardRight,
+          bottom: cardBottom,
+          width: cardScale,
+          height: "auto",
+          animation: "floatSlower 8s ease-in-out infinite",
+          filter: "drop-shadow(0 30px 60px rgba(58, 48, 42, 0.15))",
+          transform: "rotate(-10deg)",
+        }}
+      >
+        <img 
+          src="/models/credit_card_fallback.png" 
+          alt="Credit card model fallback" 
+          className="w-full h-auto object-contain"
+        />
+      </div>
+
+      <style>{`
+        @keyframes floatSlow {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-15px) rotate(3deg); }
+        }
+        @keyframes floatSlower {
+          0%, 100% { transform: translateY(0px) rotate(-10deg); }
+          50% { transform: translateY(20px) rotate(-7deg); }
+        }
+      `}</style>
+    </div>
+  );
+};
+
 const Hero = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [screenSize, setScreenSize] = useState("desktop"); // 'mobile', 'tablet', 'desktop'
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w < 640) {
+        setScreenSize("mobile");
+      } else if (w < 1024) {
+        setScreenSize("tablet");
+      } else {
+        setScreenSize("desktop");
+      }
+    };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const bitcoinPos = screenSize === "mobile" 
+    ? [-2.4, 4.0, -3.5] 
+    : screenSize === "tablet" 
+      ? [-2.8, 3.5, -3] 
+      : [-4.5, 2.5, -3];
+
+  const cardPos = screenSize === "mobile" 
+    ? [1.0, -2.8, -3.5] 
+    : screenSize === "tablet" 
+      ? [2.8, -1.2, -3] 
+      : [4.5, -0.5, -3];
+
+  const cameraPos = screenSize === "mobile" 
+    ? [0, 0, 14] 
+    : screenSize === "tablet" 
+      ? [0, 0, 10] 
+      : [0, 0, 8];
 
   return (
     <section
@@ -40,37 +136,39 @@ const Hero = () => {
     >
       {/* 3D CANVAS BACKGROUND */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <Canvas
-          camera={{ position: [0, 0, isMobile ? 12 : 8], fov: 45 }}
-          dpr={[1, 1.5]}
-          gl={{ powerPreference: "high-performance", antialias: true }}
-        >
-          <Suspense fallback={null}>
-            <Environment preset="city" />
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
+        <ErrorBoundary fallback={<Hero3DFallback screenSize={screenSize} />}>
+          <Canvas
+            camera={{ position: cameraPos, fov: 45 }}
+            dpr={[1, 1.5]}
+            gl={{ powerPreference: "high-performance", antialias: true }}
+          >
+            <Suspense fallback={null}>
+              <Environment preset="city" />
+              <ambientLight intensity={0.5} />
+              <directionalLight position={[10, 10, 5]} intensity={1} />
 
-            <Float
-              speed={1.5}
-              rotationIntensity={1.2}
-              floatIntensity={1.5}
-              position={isMobile ? [-1.5, 4.5, -2] : [-4.5, 2.5, -3]}
-            >
-              <BitcoinModel isMobile={isMobile} />
-            </Float>
+              <Float
+                speed={1.5}
+                rotationIntensity={1.2}
+                floatIntensity={1.5}
+                position={bitcoinPos}
+              >
+                <BitcoinModel screenSize={screenSize} />
+              </Float>
 
-            <Float
-              speed={1.2}
-              rotationIntensity={1.5}
-              floatIntensity={1.2}
-              position={isMobile ? [1.5, -2, -2] : [4.5, -0.5, -3]}
-            >
-              <CreditCardModel isMobile={isMobile} />
-            </Float>
+              <Float
+                speed={1.2}
+                rotationIntensity={1.5}
+                floatIntensity={1.2}
+                position={cardPos}
+              >
+                <CreditCardModel screenSize={screenSize} />
+              </Float>
 
-            {!isMobile && <ContactShadows position={[0, -5, 0]} opacity={0.3} scale={20} blur={2} far={6} resolution={256} frames={1} />}
-          </Suspense>
-        </Canvas>
+              {screenSize === "desktop" && <ContactShadows position={[0, -5, 0]} opacity={0.3} scale={20} blur={2} far={6} resolution={256} frames={1} />}
+            </Suspense>
+          </Canvas>
+        </ErrorBoundary>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full text-center">
@@ -80,16 +178,16 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-5xl md:text-7xl lg:text-[110px] font-serif font-medium text-[#2a1f17] leading-[1.05] tracking-tight pointer-events-auto"
+          className="text-5xl md:text-7xl lg:text-[100px] font-serif font-medium text-[#2a1f17] leading-[1.05] tracking-tight pointer-events-auto"
         >
-          India's Most <br className="hidden md:block" /> Trusted Payments App.
+          India's Most Trusted <br className="hidden md:block" /> Payments & Freelance App.
         </motion.h1>
 
         {/* MOCKUP SECTION */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative w-full max-w-5xl mx-auto mt-16 md:mt-24 mb-20 md:mb-32 pointer-events-auto"
         >
           {/* Background Pill Shape */}
@@ -161,7 +259,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.6 }}
+          transition={{ duration: 1 }}
           className="mt-16 w-full max-w-5xl mx-auto pointer-events-auto"
         >
           <p className="text-[#8c7e72] text-xs md:text-sm font-semibold tracking-wider uppercase mb-8 text-left px-2">

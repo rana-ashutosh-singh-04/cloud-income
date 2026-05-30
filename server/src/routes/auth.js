@@ -9,23 +9,33 @@ const router = express.Router()
 // Register
 router.post('/signup', async (req, res) => {
   try {
-    const { name, phone, vpa, pin } = req.body
+    const nameStr = String(req.body.name || '').trim()
+    const phoneStr = String(req.body.phone || '').trim()
+    const vpaStr = String(req.body.vpa || '').trim()
+    const pinStr = String(req.body.pin || '').trim()
+
+    if (!nameStr || !phoneStr || !vpaStr || !pinStr) {
+      return res.status(400).json({ message: 'All fields (name, phone, vpa, pin) are required' })
+    }
 
     // Check if user exists
-    const existingUser = await User.findOne({ $or: [{ phone }, { vpa }] })
+    const existingUser = await User.findOne({ $or: [{ phone: phoneStr }, { vpa: vpaStr }] })
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' })
     }
 
     // Hash pin
-    const hashedPin = await bcrypt.hash(pin, 10)
+    const hashedPin = await bcrypt.hash(pinStr, 10)
 
     // Create user
+    const isAdmin = req.body.adminSecret === (process.env.ADMIN_SECRET_KEY || 'superadmin123')
+
     const user = new User({
-      name,
-      phone,
-      vpa,
-      pin: hashedPin
+      name: nameStr,
+      phone: phoneStr,
+      vpa: vpaStr,
+      pin: hashedPin,
+      isAdmin
     })
 
     await user.save()
@@ -42,7 +52,8 @@ router.post('/signup', async (req, res) => {
         vpa: user.vpa,
         balance: user.balance,
         rewards: user.rewards,
-        gold: user.gold
+        gold: user.gold,
+        isAdmin: user.isAdmin
       }
     })
   } catch (error) {
@@ -57,18 +68,19 @@ router.post('/signup', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
   try {
-    const { phone, pin } = req.body
+    const phoneStr = String(req.body.phone || '').trim()
+    const pinStr = String(req.body.pin || '').trim()
 
-    if (!phone || !pin) {
+    if (!phoneStr || !pinStr) {
       return res.status(400).json({ message: 'Phone and PIN are required' })
     }
 
-    const user = await User.findOne({ phone })
+    const user = await User.findOne({ phone: phoneStr })
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' })
     }
 
-    const isMatch = await bcrypt.compare(pin, user.pin)
+    const isMatch = await bcrypt.compare(pinStr, user.pin)
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' })
     }
@@ -84,7 +96,8 @@ router.post('/login', async (req, res) => {
         vpa: user.vpa,
         balance: user.balance,
         rewards: user.rewards,
-        gold: user.gold
+        gold: user.gold,
+        isAdmin: user.isAdmin
       }
     })
   } catch (error) {
@@ -106,7 +119,8 @@ router.get('/me', auth, async (req, res) => {
       vpa: req.user.vpa,
       balance: req.user.balance,
       rewards: req.user.rewards,
-      gold: req.user.gold
+      gold: req.user.gold,
+      isAdmin: req.user.isAdmin
     }
   })
 })

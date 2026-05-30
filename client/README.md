@@ -31,7 +31,7 @@ client/
 │   │   ├── Dashboard.jsx   # Authenticated user dashboard
 │   │   ├── StockMarket.jsx # Real-time stock trading & analytics
 │   │   ├── Contact.jsx     # Community & Contact split-layout
-│   │   ├── TrustAndSafety.jsx # Security compliance page
+│   │   ├── TrustAndInvestors.jsx # Combined Trust, Safety & Investor Relations page
 │   │   └── ...
 │   ├── hooks/              # Custom React hooks (e.g., useAuth)
 │   ├── lib/                # Third-party lib configurations (e.g., axios)

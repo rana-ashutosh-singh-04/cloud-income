@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Card from "../components/card";
 import { api } from "../lib/api";
@@ -14,7 +13,6 @@ import {
   XCircle,
   Clock,
   QrCode,
-  Search,
   UserPlus,
   Wifi,
   WifiOff,
@@ -23,7 +21,6 @@ import QRModal from "../components/QRMOdal";
 
 export default function SendMoney() {
   const { user, setUser } = useAuth();
-  const navigate = useNavigate();
   const socket = useSocket();
   const [vpa, setVpa] = useState("");
   const [amount, setAmount] = useState("");
@@ -32,8 +29,12 @@ export default function SendMoney() {
   const [loading, setLoading] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const [recentContacts, setRecentContacts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const [paymentStatus, setPaymentStatus] = useState(""); // processing, success, failed
+
+  // UPI PIN Modal states
+  const [pinModalOpen, setPinModalOpen] = useState(false);
+  const [pinSuccess, setPinSuccess] = useState(false);
+  const [pinReference, setPinReference] = useState("");
 
   useEffect(() => {
     loadRecentTransactions();
@@ -55,7 +56,7 @@ export default function SendMoney() {
       loadRecentTransactions();
       socket.clearTransaction();
     }
-  }, [socket.lastTransaction]);
+  }, [socket.lastTransaction, socket]);
 
   // Listen for real-time balance updates
  useEffect(() => {
@@ -85,7 +86,7 @@ export default function SendMoney() {
     localStorage.setItem("user", JSON.stringify(updatedUser));
     return updatedUser;
   });
-}, [socket.balanceUpdate, setUser]);
+}, [socket.balanceUpdate, setUser, socket]);
 
   const loadRecentTransactions = async () => {
     try {
@@ -106,53 +107,71 @@ export default function SendMoney() {
     }
   };
 
+  const playSendChime = () => {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const playTone = (freq, start, duration) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime + start);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + start);
+        osc.stop(ctx.currentTime + start + duration);
+      };
+      playTone(783.99, 0, 0.25);
+      playTone(1046.50, 0.12, 0.4);
+    } catch (e) {
+      console.warn("Chime playback failed", e);
+    }
+  };
+
+
   const submit = async (e) => {
     e.preventDefault();
     setStatus("");
-    setPaymentStatus("processing");
-    setLoading(true);
+    setPinSuccess(false);
+    setPinReference("");
+
+    const num = Number(amount);
+    if (!vpa) {
+      setStatus({ type: "error", message: "Receiver UPI ID or Phone Number is required" });
+      return;
+    }
+    if (isNaN(num) || num <= 0) {
+      setStatus({ type: "error", message: "Please enter a valid amount" });
+      return;
+    }
+
+    setPinModalOpen(true);
 
     try {
       const { data } = await api.post("/txn/send", {
         vpa,
-        amount: Number(amount),
+        amount: num,
         note,
+        pin: "000000",
       });
+
+      playSendChime();
+      setPinSuccess(true);
+      setPinReference(data.transaction.reference);
       
-      // Real-time update will be handled by WebSocket
-      // But show immediate feedback
-      setPaymentStatus("processing");
-      setStatus({
-        type: "info",
-        message: "Processing payment...",
-        reference: data.transaction.reference,
-      });
-      
-      // Wait a moment for WebSocket to update
-      setTimeout(() => {
-        if (paymentStatus !== "success") {
-          setStatus({
-            type: "success",
-            message: "Money sent successfully!",
-            reference: data.transaction.reference,
-          });
-          setVpa("");
-          setAmount("");
-          setNote("");
-          setPaymentStatus("");
-          setLoading(false);
-          loadRecentTransactions();
-        }
-      }, 1000);
+      // Update UI state (refresh recent transactions, clear note)
+      setNote("");
+      loadRecentTransactions();
     } catch (err) {
-      setPaymentStatus("failed");
-      const errorMessage = err?.response?.data?.error || err?.response?.data?.message || "Transaction failed";
-      setStatus({
-        type: "error",
-        message: errorMessage,
-      });
-      console.error("Transaction error:", err?.response?.data || err);
-      setLoading(false);
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "Transaction failed.";
+      setStatus({ type: "error", message: errorMessage });
+      setPinModalOpen(false);
     }
   };
 
@@ -203,7 +222,7 @@ export default function SendMoney() {
                 {/* VPA Input */}
                 <div>
                   <label className="block text-sm font-semibold text-[#605850] mb-2">
-                    Receiver UPI ID
+                    Receiver UPI ID or Phone Number
                   </label>
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#8c7e72]" />
@@ -211,7 +230,7 @@ export default function SendMoney() {
                       type="text"
                       value={vpa}
                       onChange={(e) => setVpa(e.target.value)}
-                      placeholder="e.g., user@bank"
+                      placeholder="e.g., user@bank or 9876543210"
                       className="w-full pl-12 pr-4 py-4 bg-white border border-[rgba(216,208,200,0.7)] rounded-[8px] focus:ring-1 focus:ring-[#c2652a] focus:border-[#c2652a] outline-none text-[#4a3d33] text-lg transition"
                       required
                     />
@@ -411,6 +430,65 @@ export default function SendMoney() {
       </main>
 
       <QRModal open={qrOpen} onClose={() => setQrOpen(false)} />
+
+      {/* UPI PIN Keypad Modal Overlay (Google Pay Theme) */}
+      {pinModalOpen && (
+        <div className="fixed inset-0 bg-[#2a1f17]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all duration-300">
+          {!pinSuccess ? (
+            <div className="w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl border-4 border-[#2a1f17] bg-white p-8 text-center flex flex-col justify-center items-center space-y-6 min-h-[350px] animate-scale-in">
+              <div className="w-16 h-16 border-4 border-[#c2652a] border-t-transparent rounded-full animate-spin"></div>
+              <div>
+                <h4 className="font-bold text-lg text-gray-900">Processing Transfer</h4>
+                <p className="text-xs text-gray-500 mt-1">Sending funds securely...</p>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-[#ffffff] rounded-[24px] shadow-[0_4px_30px_rgba(58,48,42,0.15)] border border-[rgba(216,208,200,0.8)] w-full max-w-sm overflow-hidden animate-scale-in text-center p-8 flex flex-col justify-center items-center space-y-6 min-h-[350px]">
+              <div className="relative">
+                <div className="w-24 h-24 rounded-full bg-green-50 flex items-center justify-center border-4 border-green-500 animate-bounce">
+                  <CheckCircle className="w-12 h-12 text-green-500" />
+                </div>
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none animate-ping opacity-25 bg-green-400 rounded-full -z-10"></div>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="font-black text-2xl text-[#2a1f17]">Money Sent Successfully</h3>
+                <p className="text-xs text-[#8c7e72] font-semibold tracking-wider uppercase">
+                  P2P UPI TRANSFER
+                </p>
+              </div>
+
+              <div className="bg-[#faf5ee] border border-[rgba(216,208,200,0.75)] rounded-[16px] p-4 w-full space-y-2 text-left shadow-inner">
+                <div className="flex justify-between text-xs text-[#605850]">
+                  <span>Sent To:</span>
+                  <span className="font-bold text-[#2a1f17]">{vpa}</span>
+                </div>
+                <div className="flex justify-between text-xs text-[#605850]">
+                  <span>Amount Sent:</span>
+                  <span className="font-bold text-red-600">-₹{amount}</span>
+                </div>
+                <div className="flex justify-between text-[10px] text-[#8c7e72] pt-2 border-t border-[rgba(216,208,200,0.45)]">
+                  <span>Transaction UTR:</span>
+                  <span className="font-mono text-[#2a1f17] select-all">{pinReference.slice(0, 18)}...</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setPinModalOpen(false);
+                  setPinSuccess(false);
+                  setVpa("");
+                  setAmount("");
+                }}
+                className="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-[12px] shadow-md transition transform active:scale-95 cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

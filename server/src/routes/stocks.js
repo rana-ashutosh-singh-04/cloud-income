@@ -3,36 +3,25 @@ import { v4 as uuidv4 } from 'uuid'
 import User from '../models/User.js'
 import Stock from '../models/Stock.js'
 import StockTransaction from '../models/StockTransaction.js'
+import GlobalStock from '../models/GlobalStock.js'
 import { auth } from '../middleware/auth.js'
 
 const router = express.Router()
 
-// Mock stock data - In production, this would come from a real stock API
-const STOCK_DATA = {
-  'RELIANCE': { name: 'Reliance Industries', price: 2450.50, change: 12.30, changePercent: 0.50 },
-  'TCS': { name: 'Tata Consultancy Services', price: 3420.75, change: -15.25, changePercent: -0.44 },
-  'INFY': { name: 'Infosys Limited', price: 1520.30, change: 8.50, changePercent: 0.56 },
-  'HDFCBANK': { name: 'HDFC Bank', price: 1680.90, change: -5.20, changePercent: -0.31 },
-  'ICICIBANK': { name: 'ICICI Bank', price: 1120.45, change: 18.75, changePercent: 1.70 },
-  'BHARTIARTL': { name: 'Bharti Airtel', price: 1320.60, change: 22.40, changePercent: 1.72 },
-  'SBIN': { name: 'State Bank of India', price: 780.25, change: 5.15, changePercent: 0.66 },
-  'WIPRO': { name: 'Wipro Limited', price: 485.80, change: -3.20, changePercent: -0.65 },
-  'LT': { name: 'Larsen & Toubro', price: 3420.00, change: 45.50, changePercent: 1.35 },
-  'AXISBANK': { name: 'Axis Bank', price: 1250.75, change: 10.30, changePercent: 0.83 },
-}
-
 // Get all available stocks with current prices
 router.get('/market', auth, async (req, res) => {
   try {
-    const stocks = Object.entries(STOCK_DATA).map(([symbol, data]) => ({
-      symbol,
-      companyName: data.name,
-      currentPrice: data.price,
-      change: data.change,
-      changePercent: data.changePercent,
+    const dbStocks = await GlobalStock.find()
+    const stocks = dbStocks.map(stock => ({
+      symbol: stock.symbol,
+      companyName: stock.name,
+      currentPrice: stock.price,
+      change: stock.change,
+      changePercent: stock.changePercent,
     }))
     res.json({ stocks })
   } catch (error) {
+    console.error('Error in /market route:', error)
     res.status(500).json({ message: 'Server error' })
   }
 })
@@ -41,7 +30,7 @@ router.get('/market', auth, async (req, res) => {
 router.get('/history/:symbol', auth, async (req, res) => {
   try {
     const { symbol } = req.params
-    const stock = STOCK_DATA[symbol]
+    const stock = await GlobalStock.findOne({ symbol })
     
     if (!stock) {
       return res.status(404).json({ message: 'Stock not found' })
@@ -68,6 +57,7 @@ router.get('/history/:symbol', auth, async (req, res) => {
 
     res.json({ symbol, history })
   } catch (error) {
+    console.error('Error in /history route:', error)
     res.status(500).json({ message: 'Server error' })
   }
 })
@@ -76,11 +66,16 @@ router.get('/history/:symbol', auth, async (req, res) => {
 router.get('/holdings', auth, async (req, res) => {
   try {
     const holdings = await Stock.find({ user: req.user._id })
+    const dbStocks = await GlobalStock.find()
+    const stockMap = dbStocks.reduce((acc, s) => {
+      acc[s.symbol] = s
+      return acc
+    }, {})
     
     // Update current prices
     const updatedHoldings = await Promise.all(
       holdings.map(async (holding) => {
-        const stockData = STOCK_DATA[holding.symbol]
+        const stockData = stockMap[holding.symbol]
         if (stockData) {
           holding.currentPrice = stockData.price
           await holding.save()
@@ -88,7 +83,7 @@ router.get('/holdings', auth, async (req, res) => {
           const totalValue = holding.quantity * stockData.price
           const totalCost = holding.quantity * holding.averagePrice
           const profitLoss = totalValue - totalCost
-          const profitLossPercent = ((profitLoss / totalCost) * 100)
+          const profitLossPercent = totalCost > 0 ? ((profitLoss / totalCost) * 100) : 0
           
           return {
             id: holding._id,
@@ -111,6 +106,7 @@ router.get('/holdings', auth, async (req, res) => {
 
     res.json({ holdings: updatedHoldings.filter(h => h !== null) })
   } catch (error) {
+    console.error('Error in /holdings route:', error)
     res.status(500).json({ message: 'Server error' })
   }
 })
@@ -118,32 +114,33 @@ router.get('/holdings', auth, async (req, res) => {
 // Buy stocks
 router.post('/buy', auth, async (req, res) => {
   try {
-    const { symbol, quantity } = req.body
+    const symbolStr = String(req.body.symbol || '').trim().toUpperCase()
+    const quantityNum = Math.floor(Number(req.body.quantity))
     const user = req.user
 
-    if (!symbol || !quantity || quantity <= 0) {
+    if (!symbolStr || isNaN(quantityNum) || quantityNum <= 0) {
       return res.status(400).json({ message: 'Invalid symbol or quantity' })
     }
 
-    const stockData = STOCK_DATA[symbol]
+    const stockData = await GlobalStock.findOne({ symbol: symbolStr })
     if (!stockData) {
       return res.status(404).json({ message: 'Stock not found' })
     }
 
     const price = stockData.price
-    const totalAmount = price * quantity
+    const totalAmount = price * quantityNum
 
     if (user.balance < totalAmount) {
       return res.status(400).json({ message: 'Insufficient balance' })
     }
 
     // Check if user already owns this stock
-    let holding = await Stock.findOne({ user: user._id, symbol })
+    let holding = await Stock.findOne({ user: user._id, symbol: symbolStr })
     
     if (holding) {
       // Update existing holding (calculate new average price)
       const totalCost = (holding.averagePrice * holding.quantity) + totalAmount
-      const totalQuantity = holding.quantity + quantity
+      const totalQuantity = holding.quantity + quantityNum
       holding.averagePrice = totalCost / totalQuantity
       holding.quantity = totalQuantity
       holding.currentPrice = price
@@ -151,9 +148,9 @@ router.post('/buy', auth, async (req, res) => {
       // Create new holding
       holding = new Stock({
         user: user._id,
-        symbol,
+        symbol: symbolStr,
         companyName: stockData.name,
-        quantity,
+        quantity: quantityNum,
         averagePrice: price,
         currentPrice: price,
       })
@@ -165,10 +162,10 @@ router.post('/buy', auth, async (req, res) => {
     // Create transaction record
     const transaction = new StockTransaction({
       user: user._id,
-      symbol,
+      symbol: symbolStr,
       companyName: stockData.name,
       type: 'BUY',
-      quantity,
+      quantity: quantityNum,
       price,
       totalAmount,
       reference: uuidv4(),
@@ -184,8 +181,8 @@ router.post('/buy', auth, async (req, res) => {
       message: 'Stock purchased successfully',
       transaction: {
         id: transaction._id,
-        symbol,
-        quantity,
+        symbol: symbolStr,
+        quantity: quantityNum,
         price,
         totalAmount,
         reference: transaction.reference,
@@ -193,6 +190,7 @@ router.post('/buy', auth, async (req, res) => {
       balance: user.balance,
     })
   } catch (error) {
+    console.error('Error in /buy route:', error)
     res.status(500).json({ message: 'Server error' })
   }
 })
@@ -200,28 +198,29 @@ router.post('/buy', auth, async (req, res) => {
 // Sell stocks
 router.post('/sell', auth, async (req, res) => {
   try {
-    const { symbol, quantity } = req.body
+    const symbolStr = String(req.body.symbol || '').trim().toUpperCase()
+    const quantityNum = Math.floor(Number(req.body.quantity))
     const user = req.user
 
-    if (!symbol || !quantity || quantity <= 0) {
+    if (!symbolStr || isNaN(quantityNum) || quantityNum <= 0) {
       return res.status(400).json({ message: 'Invalid symbol or quantity' })
     }
 
-    const stockData = STOCK_DATA[symbol]
+    const stockData = await GlobalStock.findOne({ symbol: symbolStr })
     if (!stockData) {
       return res.status(404).json({ message: 'Stock not found' })
     }
 
-    const holding = await Stock.findOne({ user: user._id, symbol })
-    if (!holding || holding.quantity < quantity) {
+    const holding = await Stock.findOne({ user: user._id, symbol: symbolStr })
+    if (!holding || holding.quantity < quantityNum) {
       return res.status(400).json({ message: 'Insufficient stock holdings' })
     }
 
     const price = stockData.price
-    const totalAmount = price * quantity
+    const totalAmount = price * quantityNum
 
     // Update holding
-    holding.quantity -= quantity
+    holding.quantity -= quantityNum
     holding.currentPrice = price
 
     if (holding.quantity === 0) {
@@ -236,10 +235,10 @@ router.post('/sell', auth, async (req, res) => {
     // Create transaction record
     const transaction = new StockTransaction({
       user: user._id,
-      symbol,
+      symbol: symbolStr,
       companyName: stockData.name,
       type: 'SELL',
-      quantity,
+      quantity: quantityNum,
       price,
       totalAmount,
       reference: uuidv4(),
@@ -254,8 +253,8 @@ router.post('/sell', auth, async (req, res) => {
       message: 'Stock sold successfully',
       transaction: {
         id: transaction._id,
-        symbol,
-        quantity,
+        symbol: symbolStr,
+        quantity: quantityNum,
         price,
         totalAmount,
         reference: transaction.reference,
@@ -263,6 +262,7 @@ router.post('/sell', auth, async (req, res) => {
       balance: user.balance,
     })
   } catch (error) {
+    console.error('Error in /sell route:', error)
     res.status(500).json({ message: 'Server error' })
   }
 })
@@ -276,10 +276,9 @@ router.get('/transactions', auth, async (req, res) => {
 
     res.json({ transactions })
   } catch (error) {
+    console.error('Error in stock /transactions route:', error)
     res.status(500).json({ message: 'Server error' })
   }
 })
 
 export default router
-
-

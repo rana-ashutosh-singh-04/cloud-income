@@ -14,9 +14,10 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { label: "our solutions", to: "/" },
+    { label: "Home", to: "/" },
+    { label: "our solutions", to: "/our-solutions" },
     { label: "Dashboard", to: "/dashboard" },
-    { label: "Investor Relations", to: "/investor-relations" },
+    ...(user && user.isAdmin ? [{ label: "Admin Panel", to: "/admin" }] : []),
     { label: "Contact Us", to: "/contact" },
     { label: "Trust & Safety", to: "/trust-safety" },
   ];

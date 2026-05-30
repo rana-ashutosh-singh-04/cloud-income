@@ -8,55 +8,53 @@ export default function LandingContent() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
 
         {/* Top Header & 4-Column Features */}
-        <FadeIn direction="up">
-          <section className="mb-24">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-16 text-[#2a1f17]">
-              We've cracked the code.
-            </h1>
+        <section className="mb-24">
+          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-16 text-[#2a1f17]">
+            We've cracked the code.
+          </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
-              <div>
-                <div className="w-8 h-8 rounded-full bg-[#c2652a]/10 flex items-center justify-center mb-4 text-[#c2652a]">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                </div>
-                <h3 className="text-lg font-bold mb-2">Swift setups</h3>
-                <p className="text-sm text-[#4a3d33] leading-relaxed">
-                  Streamline your onboarding with automated processes that get you up and running without technical delays.
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+            <div>
+              <div className="w-8 h-8 rounded-full bg-[#c2652a]/10 flex items-center justify-center mb-4 text-[#c2652a]">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
               </div>
-              <div>
-                <div className="w-8 h-8 rounded-full bg-[#c2652a]/10 flex items-center justify-center mb-4 text-[#c2652a]">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                </div>
-                <h3 className="text-lg font-bold mb-2">Custom-fit features</h3>
-                <p className="text-sm text-[#4a3d33] leading-relaxed">
-                  Our platform adapts to your specific needs, delivering tools that fit seamlessly into your existing workflows.
-                </p>
-              </div>
-              <div>
-                <div className="w-8 h-8 rounded-full bg-[#c2652a]/10 flex items-center justify-center mb-4 text-[#c2652a]">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                </div>
-                <h3 className="text-lg font-bold mb-2">Future-proof details</h3>
-                <p className="text-sm text-[#4a3d33] leading-relaxed">
-                  Built with scalability in mind. Grow your business without worrying about infrastructure bottlenecks.
-                </p>
-              </div>
-              <div>
-                <div className="w-8 h-8 rounded-full bg-[#c2652a]/10 flex items-center justify-center mb-4 text-[#c2652a]">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                </div>
-                <h3 className="text-lg font-bold mb-2">Seamless sync</h3>
-                <p className="text-sm text-[#4a3d33] leading-relaxed">
-                  Connect your favorite applications instantly. Our robust API ensures your data flows smoothly across platforms.
-                </p>
-              </div>
+              <h3 className="text-lg font-bold mb-2">Swift setups</h3>
+              <p className="text-sm text-[#4a3d33] leading-relaxed">
+                Streamline your onboarding with automated processes that get you up and running without technical delays.
+              </p>
             </div>
-          </section>
-        </FadeIn>
+            <div>
+              <div className="w-8 h-8 rounded-full bg-[#c2652a]/10 flex items-center justify-center mb-4 text-[#c2652a]">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              </div>
+              <h3 className="text-lg font-bold mb-2">Custom-fit features</h3>
+              <p className="text-sm text-[#4a3d33] leading-relaxed">
+                Our platform adapts to your specific needs, delivering tools that fit seamlessly into your existing workflows.
+              </p>
+            </div>
+            <div>
+              <div className="w-8 h-8 rounded-full bg-[#c2652a]/10 flex items-center justify-center mb-4 text-[#c2652a]">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+              </div>
+              <h3 className="text-lg font-bold mb-2">Future-proof details</h3>
+              <p className="text-sm text-[#4a3d33] leading-relaxed">
+                Built with scalability in mind. Grow your business without worrying about infrastructure bottlenecks.
+              </p>
+            </div>
+            <div>
+              <div className="w-8 h-8 rounded-full bg-[#c2652a]/10 flex items-center justify-center mb-4 text-[#c2652a]">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              </div>
+              <h3 className="text-lg font-bold mb-2">Seamless sync</h3>
+              <p className="text-sm text-[#4a3d33] leading-relaxed">
+                Connect your favorite applications instantly. Our robust API ensures your data flows smoothly across platforms.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Hero Landscape Image */}
-        <FadeIn delay={0.2} direction="up">
+        <FadeIn direction="up">
           <section className="mb-32">
             <div className="w-full h-[400px] md:h-[600px] rounded-3xl overflow-hidden relative shadow-lg">
               {/* Placeholder for the landscape image */}
@@ -72,50 +70,46 @@ export default function LandingContent() {
 
         {/* See the Big Picture */}
         <section className="mb-32 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <FadeIn direction="left">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6 text-[#2a1f17]">See the Big Picture</h2>
-              <p className="text-[#4a3d33] mb-8 leading-relaxed">
-                Unlock powerful insights with our comprehensive analytics dashboard. Track growth, identify trends, and make data-driven decisions that propel your business forward.
-              </p>
+          <div>
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6 text-[#2a1f17]">See the Big Picture</h2>
+            <p className="text-[#4a3d33] mb-8 leading-relaxed">
+              Unlock powerful insights with our comprehensive analytics dashboard. Track growth, identify trends, and make data-driven decisions that propel your business forward.
+            </p>
 
-              <ul className="space-y-4 mb-10 text-sm text-[#4a3d33]">
-                <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#c2652a]/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-[#c2652a] text-xs font-bold">✓</span>
-                  </div>
-                  <span>Real-time data visualization and custom reporting tailored to your KPIs.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#c2652a]/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-[#c2652a] text-xs font-bold">✓</span>
-                  </div>
-                  <span>Predictive algorithms that highlight emerging market opportunities.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#c2652a]/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-[#c2652a] text-xs font-bold">✓</span>
-                  </div>
-                  <span>Comprehensive integration with your existing CRM and sales platforms.</span>
-                </li>
-              </ul>
+            <ul className="space-y-4 mb-10 text-sm text-[#4a3d33]">
+              <li className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-[#c2652a]/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-[#c2652a] text-xs font-bold">✓</span>
+                </div>
+                <span>Real-time data visualization and custom reporting tailored to your KPIs.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-[#c2652a]/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-[#c2652a] text-xs font-bold">✓</span>
+                </div>
+                <span>Predictive algorithms that highlight emerging market opportunities.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-[#c2652a]/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-[#c2652a] text-xs font-bold">✓</span>
+                </div>
+                <span>Comprehensive integration with your existing CRM and sales platforms.</span>
+              </li>
+            </ul>
 
-              <button className="bg-[#c2652a] text-white hover:bg-[#a55220] px-8 py-3 rounded-full text-sm font-semibold transition shadow-sm">
-                Explore Now
-              </button>
-            </div>
-          </FadeIn>
+            <button className="bg-[#c2652a] text-white hover:bg-[#a55220] px-8 py-3 rounded-full text-sm font-semibold transition shadow-sm">
+              Explore Now
+            </button>
+          </div>
 
-          <FadeIn direction="right" delay={0.2}>
-            <div className="rounded-3xl overflow-hidden bg-[#e8e2d7] aspect-[4/5] relative shadow-md">
-              {/* Placeholder for 3D graphic */}
-              <img
-                src="/cardmap.jpg"
-                alt="cardmap jpg"
-                className="w-full h-full object-cover opacity-90"
-              />
-            </div>
-          </FadeIn>
+          <div className="rounded-3xl overflow-hidden bg-[#e8e2d7] aspect-[4/5] relative shadow-md">
+            {/* Placeholder for 3D graphic */}
+            <img
+              src="/cardmap.jpg"
+              alt="cardmap jpg"
+              className="w-full h-full object-cover opacity-90"
+            />
+          </div>
         </section>
 
         {/* Why Choose Cloud Income? (Table Section) */}
@@ -176,7 +170,7 @@ export default function LandingContent() {
             </div>
           </FadeIn>
 
-          <FadeIn direction="right" delay={0.2}>
+          <FadeIn direction="right">
             <div className="order-1 lg:order-2">
               <h3 className="text-2xl md:text-3xl font-serif font-medium leading-snug mb-8 text-[#2a1f17]">
                 "I was skeptical, but Cloud Income has completely transformed the way I manage my business. The data visualizations are so clear and intuitive, and the platform is so easy to use, I can't imagine running my company without it."

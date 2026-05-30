@@ -1,4 +1,4 @@
-import { ArrowUpRight, ArrowDownRight, Clock } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, Clock } from "lucide-react";
 
 export default function TransactionItem({ txn }) {
   const sign = txn.type === "DEBIT" ? "-" : "+";
@@ -17,9 +17,9 @@ export default function TransactionItem({ txn }) {
           } transition`}
         >
           {isDebit ? (
-            <ArrowDownRight className="w-5 h-5 text-[#8c3c3c]" />
+            <ArrowUpRight className="w-5 h-5 text-[#8c3c3c]" />
           ) : (
-            <ArrowUpRight className="w-5 h-5 text-[#c2652a]" />
+            <ArrowDownLeft className="w-5 h-5 text-[#c2652a]" />
           )}
         </div>
         <div className="flex-1 min-w-0">

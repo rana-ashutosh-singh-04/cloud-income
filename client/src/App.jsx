@@ -8,19 +8,25 @@ import Recharge from "./pages/Recharge";
 import CreditCard from "./pages/CreditCard";
 import Login from "./pages/Login";
 import Signup from "./pages/signup";
-import InvestorRelations from "./pages/InvestorRelations";
+import TrustAndInvestors from "./pages/TrustAndInvestors";
 import Contact from "./pages/Contact";
-import TrustAndSafety from "./pages/TrustAndSafety";
+import OurSolutions from "./pages/OurSolutions";
+import AdminDashboard from "./pages/AdminDashboard";
 import { useAuth } from "./hooks/useAuth";
 import { useEffect } from "react";
 
 export default function App() {
-  const { user, initFromStorage } = useAuth();
+  const { user, initFromStorage, syncUser } = useAuth();
 
   useEffect(() => {
     // Load token and user info from localStorage on app start
     initFromStorage();
-  }, []);
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      syncUser();
+    }
+  }, [initFromStorage, syncUser]);
 
   return (
     <div className="min-h-screen bg-[#faf5ee] text-[#4a3d33]">
@@ -29,9 +35,9 @@ export default function App() {
         <Route path="/" element={<Home />} />
 
         {/* 📄 Public pages */}
-        <Route path="/investor-relations" element={<InvestorRelations />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/trust-safety" element={<TrustAndSafety />} />
+        <Route path="/trust-safety" element={<TrustAndInvestors />} />
+        <Route path="/our-solutions" element={<OurSolutions />} />
 
         {/* 🔒 Authenticated user routes */}
         {user ? (
@@ -42,6 +48,7 @@ export default function App() {
             <Route path="/stocks" element={<StockMarket />} />
             <Route path="/recharge" element={<Recharge />} />
             <Route path="/credit" element={<CreditCard />} />
+            {user.isAdmin && <Route path="/admin" element={<AdminDashboard user={user} />} />}
 
             {/* Already logged in? Redirect from login/signup */}
             <Route path="/login" element={<Navigate to="/" replace />} />

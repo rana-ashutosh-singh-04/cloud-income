@@ -109,4 +109,19 @@ export const useAuth = create((set, get) => ({
       return { user: nextUser };
     });
   },
+
+  // -------------------------
+  // Sync User from server DB
+  // -------------------------
+  syncUser: async () => {
+    try {
+      const { data } = await api.get("/auth/me");
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        set({ user: data.user });
+      }
+    } catch (e) {
+      console.error("Failed to sync user status from server:", e);
+    }
+  },
 }));

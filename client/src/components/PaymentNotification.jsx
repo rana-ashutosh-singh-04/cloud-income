@@ -9,7 +9,7 @@ export default function PaymentNotification({ payment, onClose }) {
       setVisible(true);
       const timer = setTimeout(() => {
         setVisible(false);
-        setTimeout(onClose, 300); // Wait for animation
+        setTimeout(onClose, 300); 
       }, 5000);
       return () => clearTimeout(timer);
     }
